@@ -1,0 +1,118 @@
+<!--index.wxml-->
+<view class="container">
+  <!-- 欢迎卡片 -->
+  <view class="welcome-card">
+    <view class="welcome-title">🔧 设备维修管理系统</view>
+    <view class="welcome-desc">{{roleText}}工作台</view>
+    <view class="user-info">欢迎，{{userInfo.name || '用户'}}</view>
+  </view>
+
+  <!-- 快捷功能 -->
+  <view class="quick-actions">
+    <!-- 普通用户功能 -->
+    <block wx:if="{{userRole === 'user'}}">
+      <navigator url="/pages/repair/repair" class="action-card">
+        <view class="action-icon">🔧</view>
+        <view class="action-title">故障报修</view>
+      </navigator>
+      <navigator url="/pages/track/track" class="action-card">
+        <view class="action-icon">📋</view>
+        <view class="action-title">我的报修</view>
+      </navigator>
+      <navigator url="/pages/inspection/inspection" class="action-card">
+        <view class="action-icon">✅</view>
+        <view class="action-title">设备点检</view>
+      </navigator>
+      <view class="action-card" bindtap="applyPermission">
+        <view class="action-icon">⬆️</view>
+        <view class="action-title">申请权限</view>
+      </view>
+    </block>
+
+    <!-- 维修人员功能 -->
+    <block wx:if="{{userRole === 'maintainer'}}">
+      <view class="action-card" bindtap="goToWorkbench">
+        <view class="action-icon">🛠️</view>
+        <view class="action-title">维修工作台</view>
+      </view>
+      <navigator url="/pages/track/track" class="action-card">
+        <view class="action-icon">📋</view>
+        <view class="action-title">维修任务</view>
+      </navigator>
+      <navigator url="/pages/maintenance/maintenance" class="action-card">
+        <view class="action-icon">⚙️</view>
+        <view class="action-title">保养管理</view>
+      </navigator>
+      <view class="action-card" bindtap="showStats">
+        <view class="action-icon">📊</view>
+        <view class="action-title">工作统计</view>
+      </view>
+    </block>
+
+    <!-- 管理员功能 -->
+    <block wx:if="{{userRole === 'admin'}}">
+      <navigator url="/pages/admin/admin" class="action-card">
+        <view class="action-icon">⚙️</view>
+        <view class="action-title">系统管理</view>
+      </navigator>
+      <view class="action-card" bindtap="showDataCenter">
+        <view class="action-icon">📊</view>
+        <view class="action-title">数据中心</view>
+      </view>
+      <view class="action-card" bindtap="manageUsers">
+        <view class="action-icon">👥</view>
+        <view class="action-title">用户管理</view>
+      </view>
+      <view class="action-card" bindtap="auditPermissions">
+        <view class="action-icon">✅</view>
+        <view class="action-title">权限审核</view>
+      </view>
+    </block>
+  </view>
+
+  <!-- 统计数据 -->
+  <view class="stats-section">
+    <view class="stats-title">📊 {{statsTitle}}</view>
+    <view class="stats-grid">
+      <view class="stat-item" wx:for="{{statsData}}" wx:key="label">
+        <view class="stat-number">{{item.value}}</view>
+        <view class="stat-label">{{item.label}}</view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 最近活动 -->
+  <view class="recent-section" wx:if="{{recentActivities.length > 0}}">
+    <view class="section-title">📝 最近活动</view>
+    <view class="activity-list">
+      <view class="activity-item" wx:for="{{recentActivities}}" wx:key="id">
+        <view class="activity-content">
+          <view class="activity-title">{{item.title}}</view>
+          <view class="activity-desc">{{item.description}}</view>
+        </view>
+        <view class="activity-time">{{item.time}}</view>
+      </view>
+    </view>
+  </view>
+</view>
+
+<!-- 权限申请弹窗 -->
+<view class="modal-overlay" wx:if="{{showPermissionModal}}" bindtap="hidePermissionModal">
+  <view class="modal-content" catchtap="">
+    <view class="modal-title">📝 权限申请</view>
+    <view class="form-group">
+      <view class="form-label">申请角色</view>
+      <picker bindchange="onRoleChange" value="{{roleIndex}}" range="{{roleOptions}}" range-key="name">
+        <view class="picker">{{roleOptions[roleIndex].name}}</view>
+      </picker>
+    </view>
+    <view class="form-group">
+      <view class="form-label">申请原因</view>
+      <textarea class="form-textarea" placeholder="请详细说明申请原因..." bindinput="onReasonInput" value="{{applyReason}}"></textarea>
+    </view>
+    <view class="modal-actions">
+      <button class="btn-cancel" bindtap="hidePermissionModal">取消</button>
+      <button class="btn-confirm" bindtap="submitPermissionApplication">提交申请</button>
+    </view>
+  </view>
+</view> 
