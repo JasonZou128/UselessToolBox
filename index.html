@@ -2,181 +2,739 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <title>设备维修管理系统</title>
     <!-- 引入微信 JS-SDK -->
     <script src="https://res.wx.qq.com/open/js/jweixin-1.6.0.js"></script>
-    <!-- 引入云开发 JS-SDK -->
-    <script src="https://res.wx.qq.com/cloud/1.1.0/cloud.js"></script>
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
+        
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-            line-height: 1.6;
-            background-color: #f5f5f5;
+            background-color: #f7f7f7;
+            padding-bottom: 60px; /* 为底部tabbar留出空间 */
+            overflow-x: hidden;
         }
-        .container {
-            max-width: 600px;
-            margin: 0 auto;
-            padding: 20px;
-        }
+        
+        /* 头部导航 */
         .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 44px;
             background: #1aad19;
             color: white;
-            padding: 15px;
-            text-align: center;
-            border-radius: 8px;
-            margin-bottom: 20px;
-        }
-        .menu {
-            background: white;
-            border-radius: 8px;
-            overflow: hidden;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-        }
-        .menu-item {
             display: flex;
             align-items: center;
-            padding: 15px;
-            border-bottom: 1px solid #eee;
+            justify-content: center;
+            font-size: 18px;
+            font-weight: bold;
+            z-index: 1000;
+            box-shadow: 0 1px 6px rgba(0,0,0,0.1);
+        }
+        
+        /* 主要内容区域 */
+        .main-content {
+            margin-top: 44px;
+            min-height: calc(100vh - 104px);
+            padding: 0;
+        }
+        
+        /* 页面容器 */
+        .page {
+            display: none;
+            min-height: 100%;
+        }
+        
+        .page.active {
+            display: block;
+        }
+        
+        /* 首页样式 */
+        .home-page {
+            padding: 20px 15px;
+        }
+        
+        .welcome-card {
+            background: linear-gradient(135deg, #1aad19, #26c91a);
+            border-radius: 12px;
+            padding: 20px;
+            color: white;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 12px rgba(26, 173, 25, 0.3);
+        }
+        
+        .welcome-title {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+        
+        .welcome-desc {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+        
+        /* 快捷功能卡片 */
+        .quick-actions {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .action-card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            transition: transform 0.2s ease;
+        }
+        
+        .action-card:active {
+            transform: scale(0.95);
+        }
+        
+        .action-icon {
+            font-size: 32px;
+            margin-bottom: 8px;
+            display: block;
+        }
+        
+        .action-title {
+            font-size: 14px;
+            color: #333;
+            font-weight: 500;
+        }
+        
+        /* 统计卡片 */
+        .stats-section {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .stats-title {
+            font-size: 16px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 15px;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+        }
+        
+        .stat-item {
+            text-align: center;
+        }
+        
+        .stat-number {
+            font-size: 24px;
+            font-weight: bold;
+            color: #1aad19;
+            display: block;
+        }
+        
+        .stat-label {
+            font-size: 12px;
+            color: #666;
+            margin-top: 4px;
+        }
+        
+        /* 表单样式 */
+        .form-container {
+            padding: 20px 15px;
+        }
+        
+        .form-card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .form-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .form-group {
+            margin-bottom: 16px;
+        }
+        
+        .form-label {
+            display: block;
+            font-size: 14px;
+            color: #333;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+        
+        .form-input,
+        .form-select,
+        .form-textarea {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1px solid #e5e5e5;
+            border-radius: 8px;
+            font-size: 16px;
+            background: #fafafa;
+            transition: border-color 0.2s ease;
+        }
+        
+        .form-input:focus,
+        .form-select:focus,
+        .form-textarea:focus {
+            outline: none;
+            border-color: #1aad19;
+            background: white;
+        }
+        
+        .form-textarea {
+            height: 80px;
+            resize: vertical;
+        }
+        
+        .form-button {
+            width: 100%;
+            padding: 14px;
+            background: #1aad19;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 500;
             cursor: pointer;
+            transition: background 0.2s ease;
         }
-        .menu-item:last-child {
-            border-bottom: none;
+        
+        .form-button:active {
+            background: #179b16;
         }
-        .menu-item i {
-            margin-right: 10px;
+        
+        /* 列表样式 */
+        .list-container {
+            padding: 15px;
+        }
+        
+        .list-item {
+            background: white;
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .list-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+        
+        .list-title {
+            font-size: 16px;
+            font-weight: 500;
+            color: #333;
+        }
+        
+        .status-badge {
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+        
+        .status-pending {
+            background: #fff3cd;
+            color: #856404;
+        }
+        
+        .status-processing {
+            background: #d1ecf1;
+            color: #0c5460;
+        }
+        
+        .status-completed {
+            background: #d4edda;
+            color: #155724;
+        }
+        
+        .list-content {
+            font-size: 14px;
+            color: #666;
+            line-height: 1.4;
+        }
+        
+        .list-time {
+            font-size: 12px;
+            color: #999;
+            margin-top: 8px;
+        }
+        
+        /* 底部TabBar */
+        .tabbar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 60px;
+            background: white;
+            border-top: 1px solid #e5e5e5;
+            display: flex;
+            z-index: 1000;
+        }
+        
+        .tab-item {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 8px;
+            cursor: pointer;
+            transition: color 0.2s ease;
+        }
+        
+        .tab-icon {
+            font-size: 20px;
+            margin-bottom: 4px;
+            color: #999;
+        }
+        
+        .tab-text {
+            font-size: 11px;
+            color: #999;
+        }
+        
+        .tab-item.active .tab-icon,
+        .tab-item.active .tab-text {
             color: #1aad19;
         }
-        .status {
-            background: #e7f3ff;
-            padding: 10px;
-            margin: 20px 0;
-            border-radius: 5px;
+        
+        /* 空状态 */
+        .empty-state {
             text-align: center;
+            padding: 60px 20px;
+            color: #999;
+        }
+        
+        .empty-icon {
+            font-size: 48px;
+            margin-bottom: 16px;
+            opacity: 0.5;
+        }
+        
+        .empty-text {
+            font-size: 16px;
+        }
+        
+        /* 响应式优化 */
+        @media (max-width: 375px) {
+            .quick-actions {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 12px;
+            }
+            
+            .action-card {
+                padding: 16px;
+            }
+            
+            .action-icon {
+                font-size: 28px;
+            }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <h1>设备维修管理系统</h1>
+    <!-- 头部导航 -->
+    <div class="header">
+        <span id="headerTitle">设备维修管理</span>
+    </div>
+    
+    <!-- 主要内容区域 -->
+    <div class="main-content">
+        <!-- 首页 -->
+        <div id="homePage" class="page active home-page">
+            <div class="welcome-card">
+                <div class="welcome-title">欢迎使用设备维修管理系统</div>
+                <div class="welcome-desc">高效管理设备维修，提升工作效率</div>
+            </div>
+            
+            <div class="quick-actions">
+                <div class="action-card" onclick="switchTab('repair')">
+                    <span class="action-icon">🔧</span>
+                    <span class="action-title">故障报修</span>
+                </div>
+                <div class="action-card" onclick="switchTab('track')">
+                    <span class="action-icon">📋</span>
+                    <span class="action-title">维修跟踪</span>
+                </div>
+                <div class="action-card" onclick="switchTab('inspection')">
+                    <span class="action-icon">✅</span>
+                    <span class="action-title">设备点检</span>
+                </div>
+                <div class="action-card" onclick="switchTab('profile')">
+                    <span class="action-icon">👤</span>
+                    <span class="action-title">个人中心</span>
+                </div>
+            </div>
+            
+            <div class="stats-section">
+                <div class="stats-title">📊 今日统计</div>
+                <div class="stats-grid">
+                    <div class="stat-item">
+                        <span class="stat-number">5</span>
+                        <span class="stat-label">待处理</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number">12</span>
+                        <span class="stat-label">处理中</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number">8</span>
+                        <span class="stat-label">已完成</span>
+                    </div>
+                </div>
+            </div>
         </div>
         
-        <div class="status" id="status">
-            正在初始化云开发环境...
+        <!-- 故障报修页面 -->
+        <div id="repairPage" class="page">
+            <div class="form-container">
+                <div class="form-card">
+                    <div class="form-title">🔧 设备故障报修</div>
+                    <form id="repairForm">
+                        <div class="form-group">
+                            <label class="form-label">设备类型</label>
+                            <select class="form-select" id="deviceType" required>
+                                <option value="">请选择设备类型</option>
+                                <option value="生产设备">生产设备</option>
+                                <option value="检测设备">检测设备</option>
+                                <option value="包装设备">包装设备</option>
+                                <option value="辅助设备">辅助设备</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">设备编号</label>
+                            <input type="text" class="form-input" id="deviceId" placeholder="请输入设备编号" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">故障类型</label>
+                            <select class="form-select" id="faultType" required>
+                                <option value="">请选择故障类型</option>
+                                <option value="机械故障">机械故障</option>
+                                <option value="电气故障">电气故障</option>
+                                <option value="软件故障">软件故障</option>
+                                <option value="其他故障">其他故障</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">紧急程度</label>
+                            <select class="form-select" id="urgency" required>
+                                <option value="">请选择紧急程度</option>
+                                <option value="紧急">🔴 紧急（影响生产）</option>
+                                <option value="重要">🟡 重要（需尽快处理）</option>
+                                <option value="一般">🟢 一般（正常处理）</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">故障描述</label>
+                            <textarea class="form-textarea" id="description" placeholder="请详细描述故障现象、发生时间等信息..." required></textarea>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">报修人</label>
+                            <input type="text" class="form-input" id="reporter" placeholder="请输入您的姓名" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">联系方式</label>
+                            <input type="tel" class="form-input" id="contact" placeholder="请输入手机号码" required>
+                        </div>
+                        
+                        <button type="submit" class="form-button">提交报修单</button>
+                    </form>
+                </div>
+            </div>
         </div>
         
-        <div class="menu">
-            <div class="menu-item" onclick="handleRepair()">
-                <i>📝</i>
-                <span>故障报修</span>
+        <!-- 维修跟踪页面 -->
+        <div id="trackPage" class="page">
+            <div class="list-container">
+                <div class="list-item">
+                    <div class="list-header">
+                        <div class="list-title">生产线A - 包装机故障</div>
+                        <span class="status-badge status-processing">处理中</span>
+                    </div>
+                    <div class="list-content">
+                        设备编号：PKG-001<br>
+                        故障类型：机械故障<br>
+                        维修员：张师傅
+                    </div>
+                    <div class="list-time">2024-01-15 09:30</div>
+                </div>
+                
+                <div class="list-item">
+                    <div class="list-header">
+                        <div class="list-title">生产线B - 检测设备异常</div>
+                        <span class="status-badge status-pending">待处理</span>
+                    </div>
+                    <div class="list-content">
+                        设备编号：DET-002<br>
+                        故障类型：电气故障<br>
+                        紧急程度：重要
+                    </div>
+                    <div class="list-time">2024-01-15 08:45</div>
+                </div>
+                
+                <div class="list-item">
+                    <div class="list-header">
+                        <div class="list-title">生产线C - 传送带维修</div>
+                        <span class="status-badge status-completed">已完成</span>
+                    </div>
+                    <div class="list-content">
+                        设备编号：CVY-003<br>
+                        故障类型：机械故障<br>
+                        维修员：李师傅
+                    </div>
+                    <div class="list-time">2024-01-14 16:20</div>
+                </div>
             </div>
-            <div class="menu-item" onclick="handleTrack()">
-                <i>🔍</i>
-                <span>维修跟踪</span>
+        </div>
+        
+        <!-- 设备点检页面 -->
+        <div id="inspectionPage" class="page">
+            <div class="form-container">
+                <div class="form-card">
+                    <div class="form-title">✅ 设备点检记录</div>
+                    <form id="inspectionForm">
+                        <div class="form-group">
+                            <label class="form-label">设备编号</label>
+                            <input type="text" class="form-input" id="inspectionDeviceId" placeholder="扫描二维码或手动输入" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">点检项目</label>
+                            <select class="form-select" id="inspectionItem" required>
+                                <option value="">请选择点检项目</option>
+                                <option value="日常点检">日常点检</option>
+                                <option value="周度点检">周度点检</option>
+                                <option value="月度点检">月度点检</option>
+                                <option value="专项点检">专项点检</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">设备状态</label>
+                            <select class="form-select" id="deviceStatus" required>
+                                <option value="">请选择设备状态</option>
+                                <option value="正常">✅ 正常</option>
+                                <option value="异常">⚠️ 异常</option>
+                                <option value="停机">🔴 停机</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">点检备注</label>
+                            <textarea class="form-textarea" id="inspectionNotes" placeholder="记录点检过程中发现的问题或注意事项..."></textarea>
+                        </div>
+                        
+                        <button type="submit" class="form-button">提交点检记录</button>
+                    </form>
+                </div>
             </div>
-            <div class="menu-item" onclick="handleInspection()">
-                <i>✅</i>
-                <span>设备点检</span>
+        </div>
+        
+        <!-- 个人中心页面 -->
+        <div id="profilePage" class="page">
+            <div class="form-container">
+                <div class="form-card">
+                    <div class="form-title">👤 个人中心</div>
+                    
+                    <div class="stats-section" style="margin-bottom: 20px;">
+                        <div class="stats-title">📈 我的统计</div>
+                        <div class="stats-grid">
+                            <div class="stat-item">
+                                <span class="stat-number">23</span>
+                                <span class="stat-label">报修单</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-number">156</span>
+                                <span class="stat-label">点检记录</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-number">89</span>
+                                <span class="stat-label">完成率%</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">姓名</label>
+                        <input type="text" class="form-input" value="张三" readonly>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">工号</label>
+                        <input type="text" class="form-input" value="EMP001" readonly>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">部门</label>
+                        <input type="text" class="form-input" value="生产部" readonly>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">联系方式</label>
+                        <input type="tel" class="form-input" value="138****8888" readonly>
+                    </div>
+                </div>
             </div>
-            <div class="menu-item" onclick="handleMaintenance()">
-                <i>⚙️</i>
-                <span>保养管理</span>
-            </div>
+        </div>
+    </div>
+    
+    <!-- 底部TabBar -->
+    <div class="tabbar">
+        <div class="tab-item active" onclick="switchTab('home')">
+            <span class="tab-icon">🏠</span>
+            <span class="tab-text">首页</span>
+        </div>
+        <div class="tab-item" onclick="switchTab('repair')">
+            <span class="tab-icon">🔧</span>
+            <span class="tab-text">报修</span>
+        </div>
+        <div class="tab-item" onclick="switchTab('track')">
+            <span class="tab-icon">📋</span>
+            <span class="tab-text">跟踪</span>
+        </div>
+        <div class="tab-item" onclick="switchTab('inspection')">
+            <span class="tab-icon">✅</span>
+            <span class="tab-text">点检</span>
+        </div>
+        <div class="tab-item" onclick="switchTab('profile')">
+            <span class="tab-icon">👤</span>
+            <span class="tab-text">我的</span>
         </div>
     </div>
 
     <script>
-        // 初始化云开发
-        try {
-            wx.cloud.init({
-                env: 'prod-8g0iq9bwb972a467' // 您的云开发环境ID
-            });
-            document.getElementById('status').innerHTML = '✅ 云开发环境初始化成功！';
-            document.getElementById('status').style.backgroundColor = '#e7f7e7';
-        } catch (error) {
-            console.error('云开发初始化失败：', error);
-            document.getElementById('status').innerHTML = '❌ 云开发环境初始化失败，请检查配置';
-            document.getElementById('status').style.backgroundColor = '#ffe7e7';
+        // 页面切换功能
+        function switchTab(tabName) {
+            // 隐藏所有页面
+            const pages = document.querySelectorAll('.page');
+            pages.forEach(page => page.classList.remove('active'));
+            
+            // 移除所有tab的active状态
+            const tabs = document.querySelectorAll('.tab-item');
+            tabs.forEach(tab => tab.classList.remove('active'));
+            
+            // 显示对应页面
+            const targetPage = document.getElementById(tabName + 'Page');
+            if (targetPage) {
+                targetPage.classList.add('active');
+            }
+            
+            // 激活对应tab
+            const targetTab = event.currentTarget;
+            if (targetTab) {
+                targetTab.classList.add('active');
+            }
+            
+            // 更新头部标题
+            const titles = {
+                'home': '设备维修管理',
+                'repair': '故障报修',
+                'track': '维修跟踪',
+                'inspection': '设备点检',
+                'profile': '个人中心'
+            };
+            
+            document.getElementById('headerTitle').textContent = titles[tabName] || '设备维修管理';
         }
-
+        
+        // 表单提交处理
+        document.getElementById('repairForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const formData = {
+                deviceType: document.getElementById('deviceType').value,
+                deviceId: document.getElementById('deviceId').value,
+                faultType: document.getElementById('faultType').value,
+                urgency: document.getElementById('urgency').value,
+                description: document.getElementById('description').value,
+                reporter: document.getElementById('reporter').value,
+                contact: document.getElementById('contact').value,
+                submitTime: new Date().toLocaleString()
+            };
+            
+            // 模拟提交
+            alert('✅ 报修单提交成功！\n\n' +
+                  '报修单号：RX' + Date.now() + '\n' +
+                  '设备类型：' + formData.deviceType + '\n' +
+                  '设备编号：' + formData.deviceId + '\n' +
+                  '我们会尽快安排维修人员处理！');
+            
+            // 清空表单
+            this.reset();
+            
+            // 跳转到跟踪页面
+            switchTab('track');
+        });
+        
+        // 点检表单提交处理
+        document.getElementById('inspectionForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const formData = {
+                deviceId: document.getElementById('inspectionDeviceId').value,
+                inspectionItem: document.getElementById('inspectionItem').value,
+                deviceStatus: document.getElementById('deviceStatus').value,
+                inspectionNotes: document.getElementById('inspectionNotes').value,
+                submitTime: new Date().toLocaleString()
+            };
+            
+            alert('✅ 点检记录提交成功！\n\n' +
+                  '设备编号：' + formData.deviceId + '\n' +
+                  '点检项目：' + formData.inspectionItem + '\n' +
+                  '设备状态：' + formData.deviceStatus + '\n' +
+                  '记录时间：' + formData.submitTime);
+            
+            // 清空表单
+            this.reset();
+        });
+        
+        // 微信SDK配置（需要后端支持）
+        // wx.config({
+        //     debug: false,
+        //     appId: 'your-app-id',
+        //     timestamp: '',
+        //     nonceStr: '',
+        //     signature: '',
+        //     jsApiList: ['scanQRCode', 'chooseImage', 'uploadImage']
+        // });
+        
         // 页面加载完成
-        console.log('页面加载完成');
-        console.log('当前访问地址：', window.location.href);
-
-        // 处理故障报修
-        async function handleRepair() {
-            try {
-                alert('故障报修功能\n\n这里将来可以：\n- 选择设备类型\n- 填写故障描述\n- 上传故障图片\n- 提交报修单');
-                
-                // 示例：调用云函数
-                /*
-                const result = await wx.cloud.callFunction({
-                    name: 'createRepairOrder',
-                    data: {
-                        type: 'repair',
-                        timestamp: Date.now()
-                    }
-                });
-                console.log('创建报修单成功：', result);
-                */
-            } catch (error) {
-                console.error('创建报修单失败：', error);
-                alert('功能暂时不可用，请稍后再试');
-            }
-        }
-
-        // 处理维修跟踪
-        async function handleTrack() {
-            try {
-                alert('维修跟踪功能\n\n这里将来可以：\n- 查看报修单状态\n- 跟踪维修进度\n- 查看维修历史');
-                
-                // 示例：从云数据库获取维修记录
-                /*
-                const db = wx.cloud.database();
-                const records = await db.collection('repair_records').get();
-                console.log('获取维修记录：', records);
-                */
-            } catch (error) {
-                console.error('获取维修记录失败：', error);
-                alert('功能暂时不可用，请稍后再试');
-            }
-        }
-
-        // 处理设备点检
-        function handleInspection() {
-            alert('设备点检功能\n\n这里将来可以：\n- 扫描设备二维码\n- 填写点检表单\n- 记录设备状态\n- 上传点检照片');
-            console.log('设备点检功能待实现');
-        }
-
-        // 处理保养管理
-        function handleMaintenance() {
-            alert('保养管理功能\n\n这里将来可以：\n- 查看保养计划\n- 记录保养内容\n- 设置保养提醒\n- 生成保养报告');
-            console.log('保养管理功能待实现');
-        }
-
-        // 微信JS-SDK配置（需要在公众号中使用）
-        wx.config({
-            debug: true, // 开启调试模式
-            appId: '', // 必填，公众号的唯一标识
-            timestamp: '', // 必填，生成签名的时间戳
-            nonceStr: '', // 必填，生成签名的随机串
-            signature: '',// 必填，签名
-            jsApiList: ['chooseImage', 'previewImage'] // 需要使用的JS接口列表
-        });
-
-        wx.ready(function(){
-            console.log('微信JS-SDK准备就绪');
-        });
-
-        wx.error(function(res){
-            console.error('微信JS-SDK配置失败', res);
-        });
+        console.log('设备维修管理系统加载完成');
+        console.log('当前版本：v2.0 - 公众号标准版');
     </script>
 </body>
 </html> 
