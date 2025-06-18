@@ -1,0 +1,1089 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>设备维修管理系统</title>
+    <script src="https://res.wx.qq.com/open/js/jweixin-1.6.0.js"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f7f7f7;
+            color: #333;
+        }
+        
+        /* 头部样式 */
+        .header {
+            background: linear-gradient(135deg, #1aad19, #26c91a);
+            color: white;
+            padding: 20px;
+            text-align: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .header h1 { font-size: 18px; margin-bottom: 5px; }
+        .header .subtitle { font-size: 14px; opacity: 0.9; }
+        
+        /* 容器样式 */
+        .container { max-width: 414px; margin: 0 auto; background: white; min-height: 100vh; }
+        .content { padding: 20px; }
+        
+        /* 角色选择页面 */
+        .role-selection {
+            text-align: center;
+            padding: 40px 20px;
+        }
+        
+        .role-selection h2 {
+            font-size: 20px;
+            margin-bottom: 10px;
+            color: #333;
+        }
+        
+        .role-description {
+            color: #666;
+            margin-bottom: 30px;
+            line-height: 1.5;
+        }
+        
+        .role-cards {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+        
+        .role-card {
+            background: white;
+            border: 2px solid #e5e5e5;
+            border-radius: 12px;
+            padding: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .role-card:hover, .role-card.selected {
+            border-color: #1aad19;
+            background: #f8fff8;
+            transform: translateY(-2px);
+        }
+        
+        .role-icon {
+            font-size: 32px;
+            margin-bottom: 10px;
+            display: block;
+        }
+        
+        .role-title {
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 8px;
+            color: #333;
+        }
+        
+        .role-desc {
+            font-size: 14px;
+            color: #666;
+            line-height: 1.4;
+        }
+        
+        /* 按钮样式 */
+        .btn {
+            width: 100%;
+            padding: 15px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary {
+            background: #1aad19;
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: #158a15;
+        }
+        
+        .btn-secondary {
+            background: #f8f9fa;
+            color: #666;
+            border: 1px solid #e5e5e5;
+        }
+        
+        /* 主界面样式 */
+        .user-info {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .user-info h3 {
+            color: #1aad19;
+            margin-bottom: 10px;
+            font-size: 16px;
+        }
+        
+        .user-detail {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 5px;
+            font-size: 14px;
+        }
+        
+        .user-detail .label { color: #666; }
+        .user-detail .value { color: #333; font-weight: 500; }
+        
+        /* 功能卡片 */
+        .function-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+        
+        .function-card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .function-card:active {
+            transform: scale(0.95);
+        }
+        
+        .function-icon {
+            font-size: 28px;
+            margin-bottom: 10px;
+            display: block;
+        }
+        
+        .function-title {
+            font-size: 14px;
+            color: #333;
+            font-weight: 500;
+        }
+        
+        /* 统计卡片 */
+        .stats-section {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .stats-title {
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: #333;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+        }
+        
+        .stat-item {
+            text-align: center;
+        }
+        
+        .stat-number {
+            font-size: 24px;
+            font-weight: bold;
+            color: #1aad19;
+            display: block;
+        }
+        
+        .stat-label {
+            font-size: 12px;
+            color: #666;
+            margin-top: 5px;
+        }
+        
+        /* 表单样式 */
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #333;
+        }
+        
+        .form-input, .form-select, .form-textarea {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1px solid #e5e5e5;
+            border-radius: 8px;
+            font-size: 14px;
+            background: white;
+        }
+        
+        .form-textarea {
+            min-height: 80px;
+            resize: vertical;
+        }
+        
+        .form-input:focus, .form-select:focus, .form-textarea:focus {
+            outline: none;
+            border-color: #1aad19;
+            box-shadow: 0 0 0 2px rgba(26, 173, 25, 0.1);
+        }
+        
+        /* 列表样式 */
+        .list-section {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .list-header {
+            background: #f8f9fa;
+            padding: 15px 20px;
+            border-bottom: 1px solid #e5e5e5;
+            font-weight: bold;
+            color: #333;
+        }
+        
+        .list-item {
+            padding: 15px 20px;
+            border-bottom: 1px solid #f0f0f0;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+        
+        .list-item:last-child {
+            border-bottom: none;
+        }
+        
+        .list-item:hover {
+            background: #f8f9fa;
+        }
+        
+        .item-title {
+            font-weight: 500;
+            margin-bottom: 5px;
+            color: #333;
+        }
+        
+        .item-desc {
+            font-size: 12px;
+            color: #666;
+            line-height: 1.4;
+        }
+        
+        .item-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 8px;
+            font-size: 12px;
+        }
+        
+        .status-badge {
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 500;
+        }
+        
+        .status-pending { background: #fff3cd; color: #856404; }
+        .status-processing { background: #d4edda; color: #155724; }
+        .status-completed { background: #d1ecf1; color: #0c5460; }
+        .status-urgent { background: #f8d7da; color: #721c24; }
+        
+        /* 弹窗样式 */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .modal.show {
+            display: flex;
+        }
+        
+        .modal-content {
+            background: white;
+            border-radius: 12px;
+            margin: 20px;
+            max-width: 350px;
+            width: 100%;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+        
+        .modal-header {
+            padding: 20px 20px 0;
+            text-align: center;
+        }
+        
+        .modal-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #333;
+        }
+        
+        .modal-body {
+            padding: 20px;
+        }
+        
+        .modal-footer {
+            padding: 0 20px 20px;
+            display: flex;
+            gap: 10px;
+        }
+        
+        /* 底部导航 */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+            max-width: 414px;
+            background: white;
+            border-top: 1px solid #e5e5e5;
+            display: flex;
+            z-index: 100;
+        }
+        
+        .nav-item {
+            flex: 1;
+            text-align: center;
+            padding: 10px 5px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+        
+        .nav-item.active {
+            background: #f8fff8;
+            color: #1aad19;
+        }
+        
+        .nav-icon {
+            font-size: 20px;
+            display: block;
+            margin-bottom: 5px;
+        }
+        
+        .nav-label {
+            font-size: 11px;
+        }
+        
+        /* 隐藏类 */
+        .hidden { display: none; }
+        
+        /* 空状态 */
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: #666;
+        }
+        
+        .empty-state .icon {
+            font-size: 48px;
+            margin-bottom: 15px;
+            opacity: 0.5;
+        }
+        
+        /* 响应式 */
+        @media (max-width: 375px) {
+            .function-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- 头部 -->
+        <div class="header">
+            <h1>🔧 设备维修管理系统</h1>
+            <div class="subtitle" id="headerSubtitle">微信公众号版</div>
+        </div>
+
+        <!-- 角色选择页面 -->
+        <div id="roleSelectionPage" class="content">
+            <div class="role-selection">
+                <h2>👋 欢迎使用设备维修管理系统</h2>
+                <div class="role-description">
+                    请选择您的角色类型，系统将为您展示相应的功能模块
+                </div>
+                
+                <div class="role-cards">
+                    <div class="role-card" onclick="selectRole('user')">
+                        <span class="role-icon">👨‍💼</span>
+                        <div class="role-title">普通用户（设备操作员）</div>
+                        <div class="role-desc">设备故障报修、查看维修进度、设备点检记录、申请权限升级</div>
+                    </div>
+                    
+                    <div class="role-card" onclick="selectRole('maintainer')">
+                        <span class="role-icon">🔧</span>
+                        <div class="role-title">维修人员</div>
+                        <div class="role-desc">处理维修任务、管理维修工作、更新任务状态、转办任务给其他维修员</div>
+                    </div>
+                    
+                    <div class="role-card" onclick="selectRole('admin')">
+                        <span class="role-icon">👨‍💻</span>
+                        <div class="role-title">管理员</div>
+                        <div class="role-desc">用户管理、权限审核、数据导出、系统设置、全局数据查看</div>
+                    </div>
+                </div>
+                
+                <button class="btn btn-primary" onclick="confirmRole()" id="confirmRoleBtn" disabled>
+                    确认进入系统
+                </button>
+            </div>
+        </div>
+
+        <!-- 主界面 -->
+        <div id="mainPage" class="content hidden">
+            <!-- 用户信息卡片 -->
+            <div class="user-info">
+                <h3 id="userRoleTitle">👨‍💼 普通用户工作台</h3>
+                <div class="user-detail">
+                    <span class="label">用户身份：</span>
+                    <span class="value" id="userRoleText">普通用户</span>
+                </div>
+                <div class="user-detail">
+                    <span class="label">权限范围：</span>
+                    <span class="value" id="userPermissions">设备报修、进度查询</span>
+                </div>
+                <div class="user-detail">
+                    <span class="label">登录时间：</span>
+                    <span class="value" id="loginTime">--</span>
+                </div>
+            </div>
+
+            <!-- 功能区域 -->
+            <div id="functionArea">
+                <!-- 功能卡片会根据角色动态生成 -->
+            </div>
+
+            <!-- 统计数据 -->
+            <div class="stats-section">
+                <div class="stats-title" id="statsTitle">📊 我的统计</div>
+                <div class="stats-grid" id="statsGrid">
+                    <!-- 统计数据会根据角色动态生成 -->
+                </div>
+            </div>
+
+            <!-- 最近记录 -->
+            <div class="list-section" id="recentSection">
+                <div class="list-header" id="recentTitle">📝 最近活动</div>
+                <div id="recentList">
+                    <!-- 最近记录会动态加载 -->
+                </div>
+            </div>
+        </div>
+
+        <!-- 底部导航 -->
+        <div class="bottom-nav" id="bottomNav" style="display: none;">
+            <div class="nav-item active" onclick="showPage('home')">
+                <span class="nav-icon">🏠</span>
+                <div class="nav-label">首页</div>
+            </div>
+            <div class="nav-item" onclick="showPage('work')">
+                <span class="nav-icon">💼</span>
+                <div class="nav-label" id="workLabel">工作</div>
+            </div>
+            <div class="nav-item" onclick="showPage('records')">
+                <span class="nav-icon">📋</span>
+                <div class="nav-label">记录</div>
+            </div>
+            <div class="nav-item" onclick="showPage('profile')">
+                <span class="nav-icon">👤</span>
+                <div class="nav-label">我的</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 设备报修弹窗 -->
+    <div id="repairModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">🔧 设备故障报修</div>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label class="form-label">设备类型</label>
+                    <select class="form-select" id="deviceType">
+                        <option value="">请选择设备类型</option>
+                        <option value="包装设备">包装设备</option>
+                        <option value="生产设备">生产设备</option>
+                        <option value="检测设备">检测设备</option>
+                        <option value="输送设备">输送设备</option>
+                        <option value="其他设备">其他设备</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">设备编号</label>
+                    <input type="text" class="form-input" id="deviceId" placeholder="如：PKG-001">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">故障类型</label>
+                    <select class="form-select" id="faultType">
+                        <option value="">请选择故障类型</option>
+                        <option value="机械故障">机械故障</option>
+                        <option value="电气故障">电气故障</option>
+                        <option value="软件故障">软件故障</option>
+                        <option value="其他故障">其他故障</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">紧急程度</label>
+                    <select class="form-select" id="urgency">
+                        <option value="">请选择紧急程度</option>
+                        <option value="低">低 - 不影响生产</option>
+                        <option value="中">中 - 略微影响生产</option>
+                        <option value="高">高 - 严重影响生产</option>
+                        <option value="紧急">紧急 - 完全停产</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">故障描述</label>
+                    <textarea class="form-textarea" id="faultDescription" placeholder="请详细描述故障现象、发生时间、可能原因等..."></textarea>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">报修人</label>
+                    <input type="text" class="form-input" id="reporter" placeholder="您的姓名">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">联系方式</label>
+                    <input type="tel" class="form-input" id="contact" placeholder="手机号或分机号">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="hideModal('repairModal')">取消</button>
+                <button class="btn btn-primary" onclick="submitRepair()">提交报修</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 权限申请弹窗 -->
+    <div id="permissionModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">📝 权限申请</div>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label class="form-label">申请角色</label>
+                    <select class="form-select" id="targetRole">
+                        <option value="">请选择申请的角色</option>
+                        <option value="maintainer">维修人员</option>
+                        <option value="admin">管理员</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">申请原因</label>
+                    <textarea class="form-textarea" id="applyReason" placeholder="请详细说明申请原因，如工作需要、技能匹配等..."></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="hideModal('permissionModal')">取消</button>
+                <button class="btn btn-primary" onclick="submitPermissionApplication()">提交申请</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 设备点检弹窗 -->
+    <div id="inspectionModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">✅ 设备点检</div>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label class="form-label">设备编号</label>
+                    <input type="text" class="form-input" id="inspectionDeviceId" placeholder="如：PKG-001">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">点检类型</label>
+                    <select class="form-select" id="inspectionType">
+                        <option value="">请选择点检类型</option>
+                        <option value="日常点检">日常点检</option>
+                        <option value="周期点检">周期点检</option>
+                        <option value="专项点检">专项点检</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">设备状态</label>
+                    <select class="form-select" id="deviceStatus">
+                        <option value="">请选择设备状态</option>
+                        <option value="正常">正常</option>
+                        <option value="异常">异常</option>
+                        <option value="需要维修">需要维修</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">点检项目</label>
+                    <div style="font-size: 12px; color: #666; margin-bottom: 8px;">
+                        请勾选已完成的点检项目：
+                    </div>
+                    <label style="display: block; margin-bottom: 5px; font-weight: normal;">
+                        <input type="checkbox" style="margin-right: 8px;"> 外观检查
+                    </label>
+                    <label style="display: block; margin-bottom: 5px; font-weight: normal;">
+                        <input type="checkbox" style="margin-right: 8px;"> 运行声音
+                    </label>
+                    <label style="display: block; margin-bottom: 5px; font-weight: normal;">
+                        <input type="checkbox" style="margin-right: 8px;"> 温度检查
+                    </label>
+                    <label style="display: block; margin-bottom: 5px; font-weight: normal;">
+                        <input type="checkbox" style="margin-right: 8px;"> 润滑情况
+                    </label>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">备注说明</label>
+                    <textarea class="form-textarea" id="inspectionNotes" placeholder="记录点检过程中发现的问题或建议..."></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="hideModal('inspectionModal')">取消</button>
+                <button class="btn btn-primary" onclick="submitInspection()">提交点检</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 全局变量
+        let currentUser = {
+            role: null,
+            name: '微信用户',
+            openid: null
+        };
+        let selectedRole = null;
+        let currentPage = 'home';
+
+        // 页面加载时初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            initWechatJS();
+            updateLoginTime();
+        });
+
+        // 初始化微信JS-SDK
+        function initWechatJS() {
+            // 这里需要从后端获取微信JS-SDK配置
+            // wx.config({...});
+            console.log('微信JS-SDK初始化');
+        }
+
+        // 角色选择
+        function selectRole(role) {
+            selectedRole = role;
+            
+            // 移除所有选中状态
+            document.querySelectorAll('.role-card').forEach(card => {
+                card.classList.remove('selected');
+            });
+            
+            // 添加选中状态
+            event.target.closest('.role-card').classList.add('selected');
+            
+            // 启用确认按钮
+            document.getElementById('confirmRoleBtn').disabled = false;
+        }
+
+        // 确认角色
+        function confirmRole() {
+            if (!selectedRole) return;
+            
+            currentUser.role = selectedRole;
+            
+            // 隐藏角色选择页面
+            document.getElementById('roleSelectionPage').classList.add('hidden');
+            
+            // 显示主界面
+            document.getElementById('mainPage').classList.remove('hidden');
+            document.getElementById('bottomNav').style.display = 'flex';
+            
+            // 初始化主界面
+            initMainPage();
+        }
+
+        // 初始化主界面
+        function initMainPage() {
+            const role = currentUser.role;
+            let roleConfig = {};
+
+            // 根据角色配置界面
+            switch(role) {
+                case 'user':
+                    roleConfig = {
+                        title: '👨‍💼 普通用户工作台',
+                        roleText: '普通用户（设备操作员）',
+                        permissions: '设备报修、进度查询、设备点检',
+                        workLabel: '报修',
+                        functions: [
+                            { icon: '🔧', title: '故障报修', action: 'showRepairModal' },
+                            { icon: '📋', title: '我的报修', action: 'showMyRepairs' },
+                            { icon: '✅', title: '设备点检', action: 'showInspectionModal' },
+                            { icon: '⬆️', title: '申请权限', action: 'showPermissionModal' }
+                        ],
+                        stats: [
+                            { label: '报修次数', value: '12' },
+                            { label: '处理中', value: '2' },
+                            { label: '已完成', value: '10' }
+                        ]
+                    };
+                    break;
+                    
+                case 'maintainer':
+                    roleConfig = {
+                        title: '🔧 维修人员工作台',
+                        roleText: '维修人员',
+                        permissions: '维修任务处理、状态更新、任务转办',
+                        workLabel: '维修',
+                        functions: [
+                            { icon: '🛠️', title: '维修任务', action: 'showMaintenanceTasks' },
+                            { icon: '📋', title: '任务管理', action: 'showTaskManagement' },
+                            { icon: '⚙️', title: '保养记录', action: 'showMaintenanceRecords' },
+                            { icon: '🔄', title: '任务转办', action: 'showTaskTransfer' }
+                        ],
+                        stats: [
+                            { label: '待处理', value: '5' },
+                            { label: '处理中', value: '3' },
+                            { label: '已完成', value: '28' }
+                        ]
+                    };
+                    break;
+                    
+                case 'admin':
+                    roleConfig = {
+                        title: '👨‍💻 管理员工作台',
+                        roleText: '系统管理员',
+                        permissions: '用户管理、权限审核、数据导出、系统设置',
+                        workLabel: '管理',
+                        functions: [
+                            { icon: '👥', title: '用户管理', action: 'showUserManagement' },
+                            { icon: '✅', title: '权限审核', action: 'showPermissionAudit' },
+                            { icon: '📊', title: '数据中心', action: 'showDataCenter' },
+                            { icon: '⚙️', title: '系统设置', action: 'showSystemSettings' }
+                        ],
+                        stats: [
+                            { label: '总用户', value: '156' },
+                            { label: '待审核', value: '8' },
+                            { label: '系统状态', value: '正常' }
+                        ]
+                    };
+                    break;
+            }
+
+            // 更新界面
+            document.getElementById('userRoleTitle').textContent = roleConfig.title;
+            document.getElementById('userRoleText').textContent = roleConfig.roleText;
+            document.getElementById('userPermissions').textContent = roleConfig.permissions;
+            document.getElementById('workLabel').textContent = roleConfig.workLabel;
+
+            // 生成功能卡片
+            generateFunctionCards(roleConfig.functions);
+            
+            // 生成统计数据
+            generateStats(roleConfig.stats);
+            
+            // 加载最近记录
+            loadRecentRecords();
+        }
+
+        // 生成功能卡片
+        function generateFunctionCards(functions) {
+            const functionArea = document.getElementById('functionArea');
+            functionArea.innerHTML = `
+                <div class="function-grid">
+                    ${functions.map(func => `
+                        <div class="function-card" onclick="${func.action}()">
+                            <span class="function-icon">${func.icon}</span>
+                            <div class="function-title">${func.title}</div>
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+        }
+
+        // 生成统计数据
+        function generateStats(stats) {
+            const statsGrid = document.getElementById('statsGrid');
+            statsGrid.innerHTML = stats.map(stat => `
+                <div class="stat-item">
+                    <span class="stat-number">${stat.value}</span>
+                    <div class="stat-label">${stat.label}</div>
+                </div>
+            `).join('');
+        }
+
+        // 加载最近记录
+        function loadRecentRecords() {
+            const role = currentUser.role;
+            let records = [];
+
+            // 模拟数据
+            switch(role) {
+                case 'user':
+                    records = [
+                        { title: '包装设备PKG-001', desc: '传送带异响问题', status: 'processing', time: '2小时前' },
+                        { title: '检测设备CHK-002', desc: '传感器故障', status: 'completed', time: '1天前' },
+                        { title: '生产设备PRD-003', desc: '温度异常', status: 'pending', time: '2天前' }
+                    ];
+                    break;
+                case 'maintainer':
+                    records = [
+                        { title: '维修任务#RX001', desc: '包装设备传送带维修', status: 'processing', time: '正在处理' },
+                        { title: '维修任务#RX002', desc: '检测设备校准', status: 'pending', time: '待处理' },
+                        { title: '维修任务#RX003', desc: '生产设备保养', status: 'completed', time: '已完成' }
+                    ];
+                    break;
+                case 'admin':
+                    records = [
+                        { title: '权限申请审核', desc: '用户张三申请维修员权限', status: 'pending', time: '待审核' },
+                        { title: '系统数据备份', desc: '每日自动数据备份', status: 'completed', time: '今日完成' },
+                        { title: '用户账号管理', desc: '新增3个用户账号', status: 'completed', time: '昨日完成' }
+                    ];
+                    break;
+            }
+
+            const recentList = document.getElementById('recentList');
+            if (records.length === 0) {
+                recentList.innerHTML = `
+                    <div class="empty-state">
+                        <div class="icon">📝</div>
+                        <div>暂无最近活动</div>
+                    </div>
+                `;
+            } else {
+                recentList.innerHTML = records.map(record => `
+                    <div class="list-item">
+                        <div class="item-title">${record.title}</div>
+                        <div class="item-desc">${record.desc}</div>
+                        <div class="item-meta">
+                            <span class="status-badge status-${record.status}">${getStatusText(record.status)}</span>
+                            <span>${record.time}</span>
+                        </div>
+                    </div>
+                `).join('');
+            }
+        }
+
+        // 获取状态文本
+        function getStatusText(status) {
+            const statusMap = {
+                'pending': '待处理',
+                'processing': '处理中',
+                'completed': '已完成',
+                'urgent': '紧急'
+            };
+            return statusMap[status] || status;
+        }
+
+        // 显示弹窗
+        function showModal(modalId) {
+            document.getElementById(modalId).classList.add('show');
+        }
+
+        // 隐藏弹窗
+        function hideModal(modalId) {
+            document.getElementById(modalId).classList.remove('show');
+        }
+
+        // 功能函数
+        function showRepairModal() {
+            showModal('repairModal');
+        }
+
+        function showPermissionModal() {
+            showModal('permissionModal');
+        }
+
+        function showInspectionModal() {
+            showModal('inspectionModal');
+        }
+
+        function showMyRepairs() {
+            alert('我的报修功能开发中...');
+        }
+
+        function showMaintenanceTasks() {
+            alert('维修任务功能开发中...');
+        }
+
+        function showTaskManagement() {
+            alert('任务管理功能开发中...');
+        }
+
+        function showMaintenanceRecords() {
+            alert('保养记录功能开发中...');
+        }
+
+        function showTaskTransfer() {
+            alert('任务转办功能开发中...');
+        }
+
+        function showUserManagement() {
+            alert('用户管理功能开发中...');
+        }
+
+        function showPermissionAudit() {
+            alert('权限审核功能开发中...');
+        }
+
+        function showDataCenter() {
+            alert('数据中心功能开发中...');
+        }
+
+        function showSystemSettings() {
+            alert('系统设置功能开发中...');
+        }
+
+        // 提交报修
+        function submitRepair() {
+            const data = {
+                deviceType: document.getElementById('deviceType').value,
+                deviceId: document.getElementById('deviceId').value,
+                faultType: document.getElementById('faultType').value,
+                urgency: document.getElementById('urgency').value,
+                description: document.getElementById('faultDescription').value,
+                reporter: document.getElementById('reporter').value,
+                contact: document.getElementById('contact').value
+            };
+
+            // 验证表单
+            if (!data.deviceType || !data.deviceId || !data.faultType || !data.urgency || !data.description || !data.reporter || !data.contact) {
+                alert('请填写完整的报修信息');
+                return;
+            }
+
+            // 这里应该调用后端接口提交数据
+            console.log('提交报修数据:', data);
+            
+            alert('报修单提交成功！工单号：RX' + Date.now());
+            hideModal('repairModal');
+            
+            // 清空表单
+            document.querySelectorAll('#repairModal input, #repairModal select, #repairModal textarea').forEach(input => {
+                input.value = '';
+            });
+        }
+
+        // 提交权限申请
+        function submitPermissionApplication() {
+            const data = {
+                targetRole: document.getElementById('targetRole').value,
+                reason: document.getElementById('applyReason').value
+            };
+
+            if (!data.targetRole || !data.reason) {
+                alert('请填写完整的申请信息');
+                return;
+            }
+
+            // 这里应该调用后端接口提交数据
+            console.log('提交权限申请:', data);
+            
+            alert('权限申请提交成功！请等待管理员审核。');
+            hideModal('permissionModal');
+            
+            // 清空表单
+            document.getElementById('targetRole').value = '';
+            document.getElementById('applyReason').value = '';
+        }
+
+        // 提交设备点检
+        function submitInspection() {
+            const data = {
+                deviceId: document.getElementById('inspectionDeviceId').value,
+                type: document.getElementById('inspectionType').value,
+                status: document.getElementById('deviceStatus').value,
+                notes: document.getElementById('inspectionNotes').value,
+                items: []
+            };
+
+            // 获取选中的点检项目
+            document.querySelectorAll('#inspectionModal input[type="checkbox"]:checked').forEach(checkbox => {
+                data.items.push(checkbox.parentElement.textContent.trim());
+            });
+
+            if (!data.deviceId || !data.type || !data.status) {
+                alert('请填写完整的点检信息');
+                return;
+            }
+
+            // 这里应该调用后端接口提交数据
+            console.log('提交点检数据:', data);
+            
+            alert('设备点检记录提交成功！');
+            hideModal('inspectionModal');
+            
+            // 清空表单
+            document.querySelectorAll('#inspectionModal input, #inspectionModal select, #inspectionModal textarea').forEach(input => {
+                if (input.type === 'checkbox') {
+                    input.checked = false;
+                } else {
+                    input.value = '';
+                }
+            });
+        }
+
+        // 页面切换
+        function showPage(page) {
+            currentPage = page;
+            
+            // 更新导航状态
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            event.target.closest('.nav-item').classList.add('active');
+            
+            // 根据页面显示不同内容
+            console.log('切换到页面:', page);
+        }
+
+        // 更新登录时间
+        function updateLoginTime() {
+            const now = new Date();
+            const timeString = now.toLocaleString('zh-CN');
+            document.getElementById('loginTime').textContent = timeString;
+        }
+
+        // 阻止弹窗背景点击关闭
+        document.addEventListener('click', function(e) {
+            if (e.target.classList.contains('modal')) {
+                // 可以选择阻止关闭或允许关闭
+                // e.target.classList.remove('show');
+            }
+        });
+    </script>
+</body>
+</html> 
