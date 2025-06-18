@@ -1,0 +1,16 @@
+{
+  "name": "equipment-maintenance-system",
+  "version": "1.0.0",
+  "description": "设备维修管理系统",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js",
+    "dev": "node app.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2"
+  },
+  "engines": {
+    "node": ">=14.0.0"
+  }
+} 

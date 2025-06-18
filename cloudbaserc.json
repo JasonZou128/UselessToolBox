@@ -1,0 +1,16 @@
+{
+  "version": "2.0",
+  "envId": "prod-8g0iq9bwb972a467",
+  "hosting": {
+    "files": [
+      {
+        "rule": "**",
+        "ignore": [
+          "node_modules/**",
+          ".git/**",
+          "*.md"
+        ]
+      }
+    ]
+  }
+} 
