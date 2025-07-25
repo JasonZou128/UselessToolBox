@@ -1,0 +1,8 @@
+.db-ops-container {
+  padding: 60rpx 40rpx;
+}
+.db-ops-container button {
+  width: 100%;
+  font-size: 32rpx;
+  height: 90rpx;
+} 

@@ -1,0 +1,44 @@
+<view class="repair-header">
+  您属于{{group}}维修组，以下是现在需要保养的设备，请按时完成保养
+</view>
+<view class="filter-bar">
+  <picker mode="selector" range="{{['全部','周','月','季','年']}}" value="{{filterIndex||0}}" bindchange="onFilterChange">
+    <view class="filter-btn">筛选：{{['全部','周','月','季','年'][filterIndex||0]}}</view>
+  </picker>
+</view>
+<view class="device-list">
+  <block wx:for="{{filteredList}}" wx:key="assetId+shouldDate">
+    <view class="device-card">
+      <view>设备编号：{{item.assetId}}</view>
+      <view>类型：{{item.type}}</view>
+      <view>线体：{{item.line}}</view>
+      <view>{{item.periodDisplay}}</view>
+      <view>应完成日期：{{item.dueDate}}</view>
+      <view style="color:#ffb300;margin:8rpx 0;">状态：{{item.status}}</view>
+      <button size="mini" type="primary" style="margin-top:10rpx;" bindtap="onShowDialog" data-index="{{index}}">完成保养</button>
+    </view>
+  </block>
+</view>
+<!-- 保养弹窗 -->
+<view wx:if="{{showDialog}}" class="dialog-overlay" bindtap="onHideDialog">
+  <view class="dialog-content" catchtap="stopPropagation">
+    <view class="dialog-title">保养完成</view>
+    <view class="dialog-body">
+      <!-- 步骤确认流程 -->
+      <block wx:if="{{currentStepIndex < currentSteps.length}}">
+        <view class="step-content">
+          步骤{{currentStepIndex+1}}：{{currentSteps[currentStepIndex].content}}
+        </view>
+        <button class="dialog-btn confirm" bindtap="onNextStep">完成本步骤，下一步</button>
+      </block>
+      <!-- 最后一步，填写保养内容 -->
+      <block wx:elif="{{currentStepIndex === currentSteps.length}}">
+        <textarea class="input" placeholder="请填写保养内容" value="{{maintainDesc}}" bindinput="onInputMaintain" auto-height />
+        <view class="dialog-footer">
+          <button class="dialog-btn cancel" bindtap="onHideDialog">取消</button>
+          <button class="dialog-btn confirm" bindtap="onSubmitMaintain" loading="{{submitting}}">提交</button>
+        </view>
+      </block>
+    </view>
+  </view>
+</view> 

@@ -1,0 +1,70 @@
+<view class="container">
+  <view class="title">{{isBatch ? '批量修改某类型设备的保养计划' : '保养计划详情'}}</view>
+  <view wx:if="{{isBatch}}">
+    <view class="info">本次将修改{{assetIds.length}}台设备的保养计划</view>
+  </view>
+  <view wx:elif="{{equipment}}">
+    <view class="info">设备编号：{{equipment.assetId}}</view>
+    <view class="info">类型：{{equipment.type}}</view>
+    <view class="info">线体：{{equipment.line}}</view>
+  </view>
+  
+  <button class="scan-btn" bindtap="onShowAddDialog">新增保养计划</button>
+  
+  <view wx:if="{{maintainPlans.length}}">
+    <view class="plan-title">保养计划列表</view>
+    <block wx:for="{{maintainPlans}}" wx:key="_id">
+      <view class="plan-card">
+        <view class="plan-period">周期：{{item.period}}</view>
+        <block wx:for="{{item.steps}}" wx:key="step">
+          <view class="plan-step">步骤{{item.step}}：{{item.content}}</view>
+        </block>
+        <view class="plan-actions">
+          <button size="mini" bindtap="onEditPlan" data-id="{{item._id}}">编辑</button>
+          <button size="mini" type="warn" bindtap="onDeletePlan" data-id="{{item._id}}">删除</button>
+        </view>
+      </view>
+    </block>
+  </view>
+</view>
+
+<!-- 新增/编辑保养计划弹窗 -->
+<view wx:if="{{showAddDialog}}" class="dialog-overlay" bindtap="onHideAddDialog">
+  <view class="dialog-content" catchtap="stopPropagation">
+    <view class="dialog-title">{{editPlanId ? '编辑保养计划' : '新增保养计划'}}</view>
+    <view class="dialog-body">
+      <view class="plan-add">
+        <input class="input" placeholder="请输入保养内容" value="{{newStepContent}}" bindinput="onInputStep" />
+        <button size="mini" type="primary" bindtap="onAddStep">新增步骤</button>
+      </view>
+      <view wx:if="{{newSteps.length}}">
+        <view class="plan-title">保养步骤</view>
+        <block wx:for="{{newSteps}}" wx:key="step">
+          <view class="plan-step">
+            步骤{{item.step}}：{{item.content}}
+            <button size="mini" type="warn" style="margin-left:20rpx;" data-idx="{{index}}" bindtap="onDeleteStep">-</button>
+          </view>
+        </block>
+      </view>
+      <picker class="input" mode="selector" range="{{periodOptions}}" bindchange="onPeriodChange">
+        <view>{{newPeriod ? newPeriod : '选择保养周期'}}</view>
+      </picker>
+    </view>
+    <view class="dialog-footer">
+      <button class="dialog-btn cancel" bindtap="onHideAddDialog">取消</button>
+      <button class="dialog-btn confirm" bindtap="onAddOrEditMaintainPlan">{{editPlanId ? '保存' : '提交'}}</button>
+    </view>
+  </view>
+</view>
+
+<!-- 删除确认弹窗 -->
+<view wx:if="{{showDeleteDialog}}" class="dialog-overlay" bindtap="onHideDeleteDialog">
+  <view class="dialog-content" catchtap="stopPropagation">
+    <view class="dialog-title">确认删除</view>
+    <view class="dialog-body">确定要删除该保养计划吗？</view>
+    <view class="dialog-footer">
+      <button class="dialog-btn cancel" bindtap="onHideDeleteDialog">取消</button>
+      <button class="dialog-btn confirm" bindtap="onConfirmDeletePlan">删除</button>
+    </view>
+  </view>
+</view> 

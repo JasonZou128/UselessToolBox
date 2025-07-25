@@ -1,0 +1,166 @@
+<view class="container">
+  <view class="push-card">
+    <view class="push-title">点检</view>
+    <block wx:for="{{inspectionTimes}}" wx:key="time">
+      <view class="push-row">
+        <view class="input">{{item}}</view>
+        <button class="push-btn" size="mini" type="warn" bindtap="onDeleteInspectionTime" data-index="{{index}}">删除</button>
+      </view>
+    </block>
+    <view class="push-btn-row">
+      <button class="push-btn add" size="mini" bindtap="onShowAddInspectionTime">添加时间点</button>
+      <button class="push-btn save" type="primary" bindtap="onSaveInspectionTimes">保存</button>
+    </view>
+  </view>
+  <!-- 周保养 -->
+  <view class="push-card">
+    <view class="push-title">周保养</view>
+    <block wx:for="{{weekMaintainTimes}}" wx:key="index">
+      <view class="push-row">
+        <view class="input">{{item.weekDay}}</view>
+        <view class="input">{{item.time}}</view>
+        <button class="push-btn" size="mini" type="warn" bindtap="onDeleteWeekMaintainTime" data-index="{{index}}">删除</button>
+      </view>
+    </block>
+    <view class="push-btn-row">
+      <button class="push-btn add" size="mini" bindtap="onShowAddWeekMaintainTime">添加时间点</button>
+      <button class="push-btn save" type="primary" bindtap="onSaveWeekMaintainTimes">保存</button>
+    </view>
+  </view>
+  <!-- 添加周保养时间点弹窗 -->
+  <view wx:if="{{showAddWeekDialog}}" class="dialog-overlay" bindtap="onHideAddWeekMaintainTimeDialog">
+    <view class="dialog-content" catchtap="stopPropagation">
+      <view class="dialog-title">添加周保养时间点</view>
+      <picker mode="selector" range="{{weekOptions}}" value="{{addWeekDay}}" bindchange="onAddWeekDayChange">
+        <view class="input">{{weekOptions[addWeekDay]}}</view>
+      </picker>
+      <picker mode="time" value="{{addWeekTime}}" bindchange="onAddWeekTimeChange">
+        <view class="input">{{addWeekTime ? addWeekTime : '请选择时间'}}</view>
+      </picker>
+      <view class="dialog-footer">
+        <button class="dialog-btn cancel" bindtap="onHideAddWeekMaintainTimeDialog">取消</button>
+        <button class="dialog-btn confirm" bindtap="onConfirmAddWeekMaintainTime">添加</button>
+      </view>
+    </view>
+  </view>
+  <!-- 月保养 -->
+  <view class="push-card">
+    <view class="push-title">月保养</view>
+    <block wx:for="{{monthMaintainTimes}}" wx:key="index">
+      <view class="push-row">
+        <view class="input">{{item.month}}</view>
+        <view class="input">{{item.day}}日</view>
+        <view class="input">{{item.time}}</view>
+        <button class="push-btn" size="mini" type="warn" bindtap="onDeleteMonthMaintainTime" data-index="{{index}}">删除</button>
+      </view>
+    </block>
+    <view class="push-btn-row">
+      <button class="push-btn add" size="mini" bindtap="onShowAddMonthMaintainTime">添加时间点</button>
+      <button class="push-btn save" type="primary" bindtap="onSaveMonthMaintainTimes">保存</button>
+    </view>
+  </view>
+  <!-- 添加月保养时间点弹窗 -->
+  <view wx:if="{{showAddMonthDialog}}" class="dialog-overlay" bindtap="onHideAddMonthMaintainTimeDialog">
+    <view class="dialog-content" catchtap="stopPropagation">
+      <view class="dialog-title">添加月保养时间点</view>
+      <picker mode="selector" range="{{monthOptions}}" value="{{addMonth}}" bindchange="onAddMonthChange">
+        <view class="input">{{monthOptions[addMonth]}}</view>
+      </picker>
+      <picker mode="selector" range="{{dayOptions}}" value="{{addDay-1}}" bindchange="onAddDayChange">
+        <view class="input">{{dayOptions[addDay-1]}}日</view>
+      </picker>
+      <picker mode="time" value="{{addTime}}" bindchange="onAddTimeChange">
+        <view class="input">{{addTime ? addTime : '请选择时间'}}</view>
+      </picker>
+      <view class="dialog-footer">
+        <button class="dialog-btn cancel" bindtap="onHideAddMonthMaintainTimeDialog">取消</button>
+        <button class="dialog-btn confirm" bindtap="onConfirmAddMonthMaintainTime">添加</button>
+      </view>
+    </view>
+  </view>
+
+  <!-- 季度保养 -->
+  <view class="push-card">
+    <view class="push-title">季度保养</view>
+    <block wx:for="{{quarterMaintainTimes}}" wx:key="index">
+      <view class="push-row">
+        <view class="input">{{item.month}}</view>
+        <view class="input">{{item.day}}日</view>
+        <view class="input">{{item.time}}</view>
+        <button class="push-btn" size="mini" type="warn" bindtap="onDeleteQuarterMaintainTime" data-index="{{index}}">删除</button>
+      </view>
+    </block>
+    <view class="push-btn-row">
+      <button class="push-btn add" size="mini" bindtap="onShowAddQuarterMaintainTime">添加时间点</button>
+      <button class="push-btn save" type="primary" bindtap="onSaveQuarterMaintainTimes">保存</button>
+    </view>
+  </view>
+  <!-- 添加季度保养时间点弹窗 -->
+  <view wx:if="{{showAddQuarterDialog}}" class="dialog-overlay" bindtap="onHideAddQuarterMaintainTimeDialog">
+    <view class="dialog-content" catchtap="stopPropagation">
+      <view class="dialog-title">添加季度保养时间点</view>
+      <picker mode="selector" range="{{monthOptions}}" value="{{addQuarterMonth}}" bindchange="onAddQuarterMonthChange">
+        <view class="input">{{monthOptions[addQuarterMonth]}}</view>
+      </picker>
+      <picker mode="selector" range="{{dayOptions}}" value="{{addQuarterDay-1}}" bindchange="onAddQuarterDayChange">
+        <view class="input">{{dayOptions[addQuarterDay-1]}}日</view>
+      </picker>
+      <picker mode="time" value="{{addQuarterTime}}" bindchange="onAddQuarterTimeChange">
+        <view class="input">{{addQuarterTime ? addQuarterTime : '请选择时间'}}</view>
+      </picker>
+      <view class="dialog-footer">
+        <button class="dialog-btn cancel" bindtap="onHideAddQuarterMaintainTimeDialog">取消</button>
+        <button class="dialog-btn confirm" bindtap="onConfirmAddQuarterMaintainTime">添加</button>
+      </view>
+    </view>
+  </view>
+
+  <!-- 年保养 -->
+  <view class="push-card">
+    <view class="push-title">年保养</view>
+    <block wx:for="{{yearMaintainTimes}}" wx:key="index">
+      <view class="push-row">
+        <view class="input">{{item.month}}</view>
+        <view class="input">{{item.day}}日</view>
+        <view class="input">{{item.time}}</view>
+        <button class="push-btn" size="mini" type="warn" bindtap="onDeleteYearMaintainTime" data-index="{{index}}">删除</button>
+      </view>
+    </block>
+    <view class="push-btn-row">
+      <button class="push-btn add" size="mini" bindtap="onShowAddYearMaintainTime">添加时间点</button>
+      <button class="push-btn save" type="primary" bindtap="onSaveYearMaintainTimes">保存</button>
+    </view>
+  </view>
+  <!-- 添加年保养时间点弹窗 -->
+  <view wx:if="{{showAddYearDialog}}" class="dialog-overlay" bindtap="onHideAddYearMaintainTimeDialog">
+    <view class="dialog-content" catchtap="stopPropagation">
+      <view class="dialog-title">添加年保养时间点</view>
+      <picker mode="selector" range="{{monthOptions}}" value="{{addYearMonth}}" bindchange="onAddYearMonthChange">
+        <view class="input">{{monthOptions[addYearMonth]}}</view>
+      </picker>
+      <picker mode="selector" range="{{dayOptions}}" value="{{addYearDay-1}}" bindchange="onAddYearDayChange">
+        <view class="input">{{dayOptions[addYearDay-1]}}日</view>
+      </picker>
+      <picker mode="time" value="{{addYearTime}}" bindchange="onAddYearTimeChange">
+        <view class="input">{{addYearTime ? addYearTime : '请选择时间'}}</view>
+      </picker>
+      <view class="dialog-footer">
+        <button class="dialog-btn cancel" bindtap="onHideAddYearMaintainTimeDialog">取消</button>
+        <button class="dialog-btn confirm" bindtap="onConfirmAddYearMaintainTime">添加</button>
+      </view>
+    </view>
+  </view>
+  <!-- 添加时间点弹窗 -->
+  <view wx:if="{{showAddInspectionTimeDialog}}" class="dialog-overlay" bindtap="onHideAddInspectionTimeDialog">
+    <view class="dialog-content" catchtap="stopPropagation">
+      <view class="dialog-title">添加时间点</view>
+      <picker mode="time" value="{{addInspectionTime}}" bindchange="onAddInspectionTimeChange">
+        <view class="input">{{addInspectionTime ? addInspectionTime : '请选择时间'}}</view>
+      </picker>
+      <view class="dialog-footer">
+        <button class="dialog-btn cancel" bindtap="onHideAddInspectionTimeDialog">取消</button>
+        <button class="dialog-btn confirm" bindtap="onConfirmAddInspectionTime">添加</button>
+      </view>
+    </view>
+  </view>
+</view> 

@@ -1,0 +1,5 @@
+<view class="db-ops-container">
+  <button type="warn" loading="{{loading}}" disabled="{{loading}}" bindtap="onClearMaintainRecords">
+    清理MaintainRecords数据库
+  </button>
+</view> 

@@ -1,0 +1,35 @@
+<view class="search-bar">
+  <picker mode="date" value="{{startDate}}" bindchange="onStartDateChange">
+    <view class="search-picker">{{startDate ? startDate : '起始日期'}}</view>
+  </picker>
+  <picker mode="date" value="{{endDate}}" bindchange="onEndDateChange">
+    <view class="search-picker">{{endDate ? endDate : '结束日期'}}</view>
+  </picker>
+  <picker class="search-picker" mode="selector" range="{{lineOptions}}" bindchange="onLineChange">
+    <view>{{searchLine ? searchLine : '选择线体'}}</view>
+  </picker>
+  <picker class="search-picker" mode="selector" range="{{typeOptions}}" bindchange="onTypeChange">
+    <view>{{searchType ? searchType : '选择类型'}}</view>
+  </picker>
+  <picker class="search-picker" mode="selector" range="{{repairmanOptions}}" bindchange="onRepairmanChange">
+    <view>{{searchRepairman ? searchRepairman : '选择维修员'}}</view>
+  </picker>
+  <button size="mini" type="primary" bindtap="onSearch">搜索</button>
+  <button size="mini" bindtap="onExport">导出Excel</button>
+</view>
+<scroll-view scroll-x="true" class="table-scroll">
+  <view class="table">
+    <view class="table-header">
+      <block wx:for="{{allFields}}" wx:key="field" wx:for-item="field">
+        <view class="th">{{fieldMap[field]}}</view>
+      </block>
+    </view>
+    <block wx:for="{{tableData}}" wx:key="_id">
+      <view class="table-row">
+        <block wx:for="{{allFields}}" wx:key="field" wx:for-item="field">
+          <view class="td">{{item[field]}}</view>
+        </block>
+      </view>
+    </block>
+  </view>
+</scroll-view> 

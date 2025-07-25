@@ -1,0 +1,75 @@
+.title {
+  font-size: 32rpx;
+  font-weight: bold;
+  margin-bottom: 30rpx;
+}
+.apply-item {
+  background: #fff;
+  border-radius: 8rpx;
+  margin-bottom: 20rpx;
+  padding: 20rpx;
+  box-shadow: 0 2rpx 8rpx #eee;
+  display: flex;
+  flex-direction: column;
+  gap: 10rpx;
+}
+.auth-btns {
+  display: flex;
+  gap: 20rpx;
+  margin-top: 20rpx;
+}
+.empty {
+  color: #aaa;
+  text-align: center;
+  margin-top: 80rpx;
+}
+.modal-mask {
+  position: fixed;
+  left: 0; right: 0; top: 0; bottom: 0;
+  background: rgba(0,0,0,0.3);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.modal-box {
+  background: #fff;
+  border-radius: 12rpx;
+  padding: 40rpx 30rpx;
+  min-width: 400rpx;
+  display: flex;
+  flex-direction: column;
+  gap: 20rpx;
+}
+.input {
+  border: 1rpx solid #ddd;
+  border-radius: 8rpx;
+  padding: 16rpx;
+  font-size: 28rpx;
+  background: #fff;
+  margin-bottom: 10rpx;
+}
+.form-btns {
+  display: flex;
+  gap: 20rpx;
+  justify-content: flex-end;
+}
+.group-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10rpx;
+  margin-bottom: 10rpx;
+}
+.group-item {
+  display: flex;
+  align-items: center;
+  gap: 6rpx;
+  background: #f5f6fa;
+  border-radius: 6rpx;
+  padding: 4rpx 10rpx;
+}
+.add-group-form {
+  display: flex;
+  gap: 10rpx;
+  margin-top: 10rpx;
+} 

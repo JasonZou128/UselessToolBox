@@ -1,0 +1,42 @@
+.container {
+  padding: 40rpx;
+}
+.search-bar {
+  margin-bottom: 30rpx;
+  background: #f5f6fa;
+  border-radius: 8rpx;
+  padding: 20rpx;
+}
+.search-row {
+  display: flex;
+  align-items: center;
+  gap: 20rpx;
+  margin-bottom: 10rpx;
+}
+.search-input {
+  flex: 1;
+  border: 1rpx solid #ddd;
+  border-radius: 8rpx;
+  padding: 16rpx;
+  font-size: 28rpx;
+  background: #fff;
+}
+.search-picker {
+  flex: 1;
+  border: 1rpx solid #ddd;
+  border-radius: 8rpx;
+  padding: 16rpx;
+  font-size: 28rpx;
+  background: #fff;
+}
+.device-list {
+  margin-top: 20rpx;
+}
+.device-card {
+  background: #fff;
+  border-radius: 8rpx;
+  margin-bottom: 20rpx;
+  padding: 20rpx;
+  box-shadow: 0 2rpx 8rpx #eee;
+  font-size: 28rpx;
+} 

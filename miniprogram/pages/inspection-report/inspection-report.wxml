@@ -1,0 +1,48 @@
+<view class="search-bar">
+  <input class="search-picker" placeholder="设备编号" value="{{assetId}}" bindinput="onAssetIdInput" />
+  <picker mode="date" value="{{startDate}}" bindchange="onStartDateChange">
+    <view class="search-picker">{{startDate ? startDate : '起始日期'}}</view>
+  </picker>
+  <picker mode="date" value="{{endDate}}" bindchange="onEndDateChange">
+    <view class="search-picker">{{endDate ? endDate : '结束日期'}}</view>
+  </picker>
+  <picker class="search-picker" mode="selector" range="{{lineOptions}}" bindchange="onLineChange">
+    <view>{{searchLine ? searchLine : '选择线体'}}</view>
+  </picker>
+  <picker class="search-picker" mode="selector" range="{{typeOptions}}" bindchange="onTypeChange">
+    <view>{{searchType ? searchType : '选择类型'}}</view>
+  </picker>
+  <picker class="search-picker" mode="selector" range="{{statusOptions}}" bindchange="onStatusChange">
+    <view>{{searchStatus ? searchStatus : '选择状态'}}</view>
+  </picker>
+  <button size="mini" type="primary" bindtap="onSearch">搜索</button>
+  <button size="mini" bindtap="onExport">导出Excel</button>
+</view>
+<scroll-view scroll-x="true" class="table-scroll">
+  <view class="table">
+    <view class="table-header">
+      <block wx:for="{{allFields}}" wx:key="field" wx:for-item="field">
+        <view class="th">{{fieldMap[field]}}</view>
+      </block>
+    </view>
+    <block wx:for="{{tableData}}" wx:key="_id" wx:for-item="item" wx:for-index="idx">
+      <view class="table-row">
+        <block wx:for="{{allFields}}" wx:key="field" wx:for-item="field">
+          <view class="td">
+            <block wx:if="{{field === 'stepsConfirm'}}">
+              <button size="mini" bindtap="onToggleSteps" data-index="{{idx}}">
+                {{stepsExpand[idx] ? '收起' : '展开'}}
+              </button>
+              <view wx:if="{{stepsExpand[idx]}}">
+                <block wx:for="{{item.stepsConfirm}}" wx:key="stepIdx">
+                  <view>步骤{{stepIdx+1}}：{{item.stepsConfirm[stepIdx].content}}{{item.stepsConfirm[stepIdx].confirmed ? '（已确认）' : ''}}</view>
+                </block>
+              </view>
+            </block>
+            <block wx:else>{{item[field]}}</block>
+          </view>
+        </block>
+      </view>
+    </block>
+  </view>
+</scroll-view> 

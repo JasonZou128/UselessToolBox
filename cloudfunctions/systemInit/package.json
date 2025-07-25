@@ -1,0 +1,9 @@
+{
+  "name": "systemInit",
+  "version": "1.0.0",
+  "description": "初始化维修管理系统数据库集合和字段",
+  "main": "index.js",
+  "dependencies": {
+    "@cloudbase/node-sdk": "^2.8.3"
+  }
+} 

@@ -1,0 +1,58 @@
+<view class="container">
+  <view class="header">
+    <view class="user-info">
+      <text class="welcome">欢迎，维修员</text>
+    </view>
+    <button class="logout-btn" bindtap="onLogout">退出登录</button>
+  </view>
+  <!-- 二级菜单 -->
+  <view class="subtabbar">
+    <block wx:if="{{activeTab==='plan'}}">
+      <view class="subtabbar-item {{activeSubTab==='inspectionPlan'?'active':''}}" data-subtab="inspectionPlan" bindtap="switchSubTab">点检计划</view>
+      <view class="subtabbar-item {{activeSubTab==='maintainPlan'?'active':''}}" data-subtab="maintainPlan" bindtap="switchSubTab">保养计划</view>
+      <view class="subtabbar-item {{activeSubTab==='planPush'?'active':''}}" data-subtab="planPush" bindtap="switchSubTab">推送设置</view>
+    </block>
+    <block wx:elif="{{activeTab==='report'}}">
+      <view class="subtabbar-item {{activeSubTab==='inspectionReport'?'active':''}}" data-subtab="inspectionReport" bindtap="switchSubTab">点检报表</view>
+      <view class="subtabbar-item {{activeSubTab==='repairReport'?'active':''}}" data-subtab="repairReport" bindtap="switchSubTab">维修报表</view>
+      <view class="subtabbar-item {{activeSubTab==='maintainReport'?'active':''}}" data-subtab="maintainReport" bindtap="switchSubTab">保养报表</view>
+    </block>
+    <block wx:elif="{{activeTab==='todo'}}">
+      <view class="subtabbar-item {{activeSubTab==='todoRepair'?'active':''}}" data-subtab="todoRepair" bindtap="switchSubTab">待处理报修</view>
+      <view class="subtabbar-item {{activeSubTab==='todoMaintain'?'active':''}}" data-subtab="todoMaintain" bindtap="switchSubTab">待处理保养</view>
+    </block>
+  </view>
+  <!-- 内容区 -->
+  <view class="tab-content">
+    <block wx:if="{{activeTab==='plan' && activeSubTab==='inspectionPlan'}}">
+      <inspection-plan />
+    </block>
+    <block wx:elif="{{activeTab==='plan' && activeSubTab==='maintainPlan'}}">
+      <maintain-plan />
+    </block>
+    <block wx:elif="{{activeTab==='plan' && activeSubTab==='planPush'}}">
+      <plan-push class="plan-push" />
+    </block>
+    <block wx:elif="{{activeTab==='report' && activeSubTab==='inspectionReport'}}">
+      <inspection-report />
+    </block>
+    <block wx:elif="{{activeTab==='report' && activeSubTab==='repairReport'}}">
+      <repair-report />
+    </block>
+    <block wx:elif="{{activeTab==='report' && activeSubTab==='maintainReport'}}">
+      <maintain-report />
+    </block>
+    <block wx:elif="{{activeTab==='todo' && activeSubTab==='todoRepair'}}">
+      <repair-todo />
+    </block>
+    <block wx:elif="{{activeTab==='todo' && activeSubTab==='todoMaintain'}}">
+      <maintain-todo />
+    </block>
+  </view>
+  <!-- 一级菜单tabbar固定底部 -->
+  <view class="tabbar-fixed">
+    <view class="tabbar-item {{activeTab==='plan'?'active':''}}" data-tab="plan" bindtap="switchTab">计划设置</view>
+    <view class="tabbar-item {{activeTab==='report'?'active':''}}" data-tab="report" bindtap="switchTab">报表查看</view>
+    <view class="tabbar-item {{activeTab==='todo'?'active':''}}" data-tab="todo" bindtap="switchTab">待处理</view>
+  </view>
+</view> 

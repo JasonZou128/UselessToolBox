@@ -1,0 +1,10 @@
+<view class="container">
+  <view class="login-title">维修管理系统登录</view>
+  <button class="login-btn" open-type="getUserInfo" bindtap="onUserLogin">微信一键登录（操作员/维修员）</button>
+  <view class="divider">或</view>
+  <view class="admin-login-box">
+    <input class="input" placeholder="管理员账号" bindinput="onUsernameInput" />
+    <input class="input" placeholder="管理员密码" password="true" bindinput="onPasswordInput" />
+    <button class="login-btn" loading="{{loading}}" bindtap="onAdminLogin">管理员登录</button>
+  </view>
+</view> 

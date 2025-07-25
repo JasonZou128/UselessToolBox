@@ -1,0 +1,7 @@
+{
+  "navigationBarTitleText": "操作员首页",
+  "usingComponents": {
+    "repair-report": "./repair-report",
+    "inspection-todo": "./inspection-todo"
+  }
+}

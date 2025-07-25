@@ -1,0 +1,63 @@
+<view>
+  <view class="title">用户管理</view>
+  <block wx:if="{{userList.length}}">
+    <block wx:for="{{userList}}" wx:key="_id">
+      <view class="apply-item">
+        <text>申请人：{{item.name}}</text>
+        <text>工号：{{item.jobId}}</text>
+        <text>状态：{{item.status === 'pending' ? '申请中' : '已授权'}}</text>
+        <text wx:if="{{item.status === 'active'}}">角色：{{item.role === 'operator' ? '操作员' : (item.role === 'repairman' ? '维修员' : '')}}</text>
+        <text wx:if="{{item.role === 'operator' && item.line}}">线体：{{item.line}}</text>
+        <text wx:if="{{item.role === 'repairman' && item.group}}">维修组：{{item.group}}</text>
+        <view class="auth-btns" wx:if="{{item.status === 'pending'}}">
+          <button size="mini" type="primary" data-id="{{item._id}}" data-role="operator" bind:tap="onAuth">授权为操作员</button>
+          <button size="mini" type="primary" data-id="{{item._id}}" data-role="repairman" bind:tap="onAuth">授权为维修员</button>
+        </view>
+        <button size="mini" type="warn" data-id="{{item._id}}" bind:tap="onDelete" style="margin-top: 16rpx;">删除</button>
+        <!-- 分配线体/维修组按钮 -->
+        <button wx:if="{{item.role === 'operator' && item.status === 'active'}}" size="mini" style="margin-top: 10rpx;" bind:tap="onShowLinePicker" data-id="{{item._id}}">分配线体</button>
+        <button wx:if="{{item.role === 'repairman' && item.status === 'active'}}" size="mini" style="margin-top: 10rpx;" bind:tap="onShowGroupPicker" data-id="{{item._id}}">分配维修组</button>
+      </view>
+    </block>
+  </block>
+  <block wx:else>
+    <view class="empty">暂无用户</view>
+  </block>
+  <!-- 分配线体弹窗 -->
+  <view wx:if="{{showLinePickerId}}" class="modal-mask">
+    <view class="modal-box">
+      <picker mode="selector" range="{{lineOptions}}" bindchange="onLinePickerChange">
+        <view class="input">{{selectedLine ? selectedLine : '请选择线体'}}</view>
+      </picker>
+      <view class="form-btns">
+        <button size="mini" type="primary" bind:tap="onConfirmLine">保存</button>
+        <button size="mini" bind:tap="onCancelLine">取消</button>
+      </view>
+    </view>
+  </view>
+  <!-- 分配维修组弹窗 -->
+  <view wx:if="{{showGroupPickerId}}" class="modal-mask">
+    <view class="modal-box">
+      <view class="group-list">
+        <block wx:for="{{repairGroups}}" wx:key="name">
+          <view class="group-item">
+            <text>{{item.name}}</text>
+            <button size="mini" type="warn" data-name="{{item.name}}" bind:tap="onDeleteGroup">-</button>
+          </view>
+        </block>
+      </view>
+      <picker mode="selector" range="{{repairGroupNames}}" bindchange="onGroupPickerChange">
+        <view class="input">{{selectedGroup ? selectedGroup : '请选择维修组'}}</view>
+      </picker>
+      <view class="form-btns">
+        <button size="mini" type="primary" bind:tap="onConfirmGroup">保存</button>
+        <button size="mini" bind:tap="onCancelGroup">取消</button>
+        <button size="mini" type="primary" bind:tap="onShowAddGroup">+</button>
+      </view>
+      <view wx:if="{{showAddGroup}}" class="add-group-form">
+        <input class="input" placeholder="新维修组名" value="{{newGroupName}}" bindinput="onInputNewGroup" />
+        <button size="mini" type="primary" bind:tap="onConfirmAddGroup">添加</button>
+      </view>
+    </view>
+  </view>
+</view> 

@@ -1,0 +1,90 @@
+.container {
+  padding: 40rpx;
+  padding-bottom: 120rpx;
+  min-height: 100vh;
+  box-sizing: border-box;
+  position: relative;
+}
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #fff;
+  padding: 20rpx;
+  margin: -40rpx -40rpx 30rpx -40rpx;
+  border-bottom: 1rpx solid #eee;
+}
+.user-info {
+  display: flex;
+  align-items: center;
+}
+.welcome {
+  font-size: 28rpx;
+  color: #333;
+}
+.logout-btn {
+  background: #ff4757;
+  color: #fff;
+  font-size: 24rpx;
+  padding: 10rpx 20rpx;
+  border-radius: 6rpx;
+  border: none;
+}
+.tabbar-fixed {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 100rpx;
+  background: #fff;
+  box-shadow: 0 -2rpx 8rpx #eee;
+  display: flex;
+  z-index: 99;
+}
+.tabbar-item {
+  flex: 1;
+  text-align: center;
+  line-height: 100rpx;
+  font-size: 28rpx;
+  color: #888;
+  transition: background 0.2s, color 0.2s;
+}
+.tabbar-item.active {
+  color: #007aff;
+  font-weight: bold;
+  border-top: 4rpx solid #007aff;
+  background: #f5f6fa;
+}
+.subtabbar {
+  display: flex;
+  background: #f5f6fa;
+  border-radius: 8rpx;
+  margin: 20rpx 0 30rpx 0;
+  overflow: hidden;
+  padding: 0 10rpx;
+}
+.subtabbar-item {
+  flex: 1;
+  text-align: center;
+  padding: 20rpx 0;
+  font-size: 28rpx;
+  color: #888;
+  background: #f5f6fa;
+  transition: background 0.2s, color 0.2s;
+  border-radius: 8rpx;
+}
+.subtabbar-item.active {
+  color: #007aff;
+  background: #fff;
+  font-weight: bold;
+  border-bottom: 4rpx solid #007aff;
+}
+.tab-content {
+  min-height: 400rpx;
+}
+.report-placeholder {
+  text-align: center;
+  color: #aaa;
+  font-size: 32rpx;
+  margin-top: 100rpx;
+} 

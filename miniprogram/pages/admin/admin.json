@@ -1,0 +1,12 @@
+{
+  "navigationBarTitleText": "用户管理",
+  "usingComponents": {
+    "user-manage": "./user-manage",
+    "line-manage": "./line-manage",
+    "equipment-manage": "./equipment-manage",
+    "repair-report": "../repair-report/repair-report",
+    "maintain-report": "/pages/maintain-report/maintain-report",
+    "db-ops": "/pages/admin/db-ops/db-ops",
+    "inspection-report": "/pages/inspection-report/inspection-report"
+  }
+} 

@@ -1,0 +1,13 @@
+{
+  "navigationBarTitleText": "维修员首页",
+  "usingComponents": {
+    "inspection-plan": "./inspection-plan/index",
+    "maintain-plan": "./maintain-plan/index",
+    "maintain-todo": "./maintain-todo",
+    "plan-push": "./plan-push",
+    "repair-todo": "./repair-todo",
+    "repair-report": "/pages/repair-report/repair-report",
+    "maintain-report": "/pages/maintain-report/maintain-report",
+    "inspection-report": "/pages/inspection-report/inspection-report"
+  }
+} 

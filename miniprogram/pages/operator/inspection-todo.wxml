@@ -1,0 +1,43 @@
+<view class="inspection-header">
+  您是{{userLine}}线的操作员，下面是您需要完成的点检任务，请及时点检。
+</view>
+<view wx:if="{{loading}}" class="loading">加载中...</view>
+<view class="inspection-list">
+  <block wx:for="{{todoList}}" wx:key="_id">
+    <view class="inspection-card">
+      <view>设备编号：{{item.assetId}}</view>
+      <view>类型：{{item.type}}</view>
+      <view>周期：{{formatDate(item.date)}}</view>
+      <view>推送时间：{{item.pushTime}}</view>
+      <view style="color:#ffb300;margin:8rpx 0;">状态：{{item.status}}</view>
+      <button size="mini" type="primary" style="margin-top:10rpx;" bindtap="onShowDialog" data-index="{{index}}">完成点检</button>
+      <button size="mini" style="margin-top:10rpx;" bindtap="onRest" data-index="{{index}}">休班</button>
+    </view>
+  </block>
+</view>
+<!-- 完成点检弹窗 -->
+<view wx:if="{{showDialog}}" class="dialog-overlay" bindtap="onHideDialog">
+  <view class="dialog-content" catchtap="stopPropagation">
+    <view class="dialog-title">点检步骤确认</view>
+    <view class="dialog-body">
+      <!-- 步骤逐步确认 -->
+      <block wx:if="{{currentStepIndex < currentSteps.length}}">
+        <view class="step-content">
+          步骤{{currentStepIndex+1}}：{{currentSteps[currentStepIndex].content}}
+        </view>
+        <button class="dialog-btn confirm" bindtap="onConfirmStep">完成本步骤，下一步</button>
+      </block>
+      <!-- 最后一步，扫码/输入设备编号 -->
+      <block wx:elif="{{currentStepIndex === currentSteps.length}}">
+        <view class="step-content">请扫码或输入设备编号确认：</view>
+        <button class="dialog-btn" bindtap="onScanAssetId">扫码设备编号</button>
+        <input class="input" placeholder="手动输入设备编号" value="{{scanAssetId}}" bindinput="onInputAssetId" />
+        <view class="error" wx:if="{{scanError}}">{{scanError}}</view>
+        <view class="dialog-footer">
+          <button class="dialog-btn cancel" bindtap="onHideDialog">取消</button>
+          <button class="dialog-btn confirm" bindtap="onSubmitFinish" loading="{{submitting}}">确定</button>
+        </view>
+      </block>
+    </view>
+  </view>
+</view>

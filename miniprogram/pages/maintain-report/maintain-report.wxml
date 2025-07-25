@@ -1,0 +1,44 @@
+<view class="search-bar">
+  <picker class="search-picker" mode="selector" range="{{periodOptions}}" bindchange="onPeriodChange">
+    <view>{{searchPeriod ? searchPeriod : '选择周期'}}</view>
+  </picker>
+  <picker class="search-picker" mode="selector" range="{{lineOptions}}" bindchange="onLineChange">
+    <view>{{searchLine ? searchLine : '选择线体'}}</view>
+  </picker>
+  <picker class="search-picker" mode="selector" range="{{typeOptions}}" bindchange="onTypeChange">
+    <view>{{searchType ? searchType : '选择类型'}}</view>
+  </picker>
+  <input class="search-input" placeholder="设备编号" value="{{searchAssetId}}" bindinput="onAssetIdInput" />
+  <button size="mini" type="primary" bindtap="onSearch">搜索</button>
+  <button size="mini" bindtap="onExport">导出Excel</button>
+</view>
+<scroll-view scroll-x="true" class="table-scroll">
+  <view class="table">
+    <view class="table-header">
+      <block wx:for="{{allFields}}" wx:key="field" wx:for-item="field">
+        <view class="th">{{fieldMap[field]}}</view>
+      </block>
+    </view>
+    <block wx:for="{{tableData}}" wx:key="_id" wx:for-item="item" wx:for-index="idx">
+      <view class="table-row">
+        <block wx:for="{{allFields}}" wx:key="field" wx:for-item="field">
+          <view class="td">
+            <block wx:if="{{field === 'steps'}}">
+              <view>
+                <button size="mini" bindtap="onToggleSteps" data-index="{{idx}}">
+                  {{stepsExpand[idx] ? '收起' : '展开'}}步骤
+                </button>
+                <view wx:if="{{stepsExpand[idx]}}">
+                  <block wx:for="{{item.steps}}" wx:key="step">
+                    <view>步骤{{index+1}}：{{item.steps[index].content}}</view>
+                  </block>
+                </view>
+              </view>
+            </block>
+            <block wx:else>{{item[field]}}</block>
+          </view>
+        </block>
+      </view>
+    </block>
+  </view>
+</scroll-view> 

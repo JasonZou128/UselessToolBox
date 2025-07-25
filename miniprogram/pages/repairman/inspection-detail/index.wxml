@@ -1,0 +1,33 @@
+<view class="container">
+  <view class="title">{{isBatch ? '批量修改某类型设备的点检计划' : '点检计划详情'}}</view>
+  <view wx:if="{{isBatch}}">
+    <view class="info">本次将修改{{assetIds.length}}台设备的点检计划</view>
+  </view>
+  <view wx:elif="{{equipment}}">
+    <view class="info">设备编号：{{equipment.assetId}}</view>
+    <view class="info">类型：{{equipment.type}}</view>
+    <view class="info">线体：{{equipment.line}}</view>
+  </view>
+  <view class="plan-add">
+    <input class="input" placeholder="请输入点检内容" value="{{newStepContent}}" bindinput="onInputStep" />
+    <button size="mini" type="primary" bindtap="onAddStep">新增步骤</button>
+  </view>
+  <view class="plan-row">
+    <picker class="input" mode="selector" range="{{periodOptions}}" bindchange="onPeriodChange">
+      <view>{{period ? period : '选择点检周期'}}</view>
+    </picker>
+    <picker class="input" mode="selector" range="{{pushTimeOptions}}" bindchange="onPushTimeChange">
+      <view>{{pushTime ? pushTime : '选择推送时间'}}</view>
+    </picker>
+  </view>
+  <view wx:if="{{steps.length}}">
+    <view class="plan-title">点检步骤</view>
+    <block wx:for="{{steps}}" wx:key="step">
+      <view class="plan-step">
+        步骤{{item.step}}：{{item.content}}
+        <button size="mini" type="warn" style="margin-left:20rpx;" data-idx="{{index}}" bindtap="onDeleteStep">-</button>
+      </view>
+    </block>
+  </view>
+  <button class="scan-btn" bindtap="onSubmitPlan">提交</button>
+</view> 

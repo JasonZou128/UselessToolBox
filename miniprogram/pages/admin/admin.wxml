@@ -1,0 +1,52 @@
+<view class="container">
+  <view class="header">
+    <view class="user-info">
+      <text class="welcome">欢迎，管理员</text>
+    </view>
+    <button class="logout-btn" bindtap="onLogout">退出登录</button>
+  </view>
+  <!-- 一级菜单tabbar -->
+  <view class="tabbar-fixed">
+    <view class="tabbar-item {{activeTab==='system'?'active':''}}" data-tab="system" bindtap="switchTab">系统管理</view>
+    <view class="tabbar-item {{activeTab==='report'?'active':''}}" data-tab="report" bindtap="switchTab">报表查询</view>
+    <view class="tabbar-item {{activeTab==='dbops'?'active':''}}" data-tab="dbops" bindtap="switchTab">数据库操作</view>
+  </view>
+  <!-- 二级菜单 -->
+  <view class="subtabbar">
+    <block wx:if="{{activeTab==='system'}}">
+      <view class="subtabbar-item {{activeSubTab==='user'?'active':''}}" data-subtab="user" bindtap="switchSubTab">用户管理</view>
+      <view class="subtabbar-item {{activeSubTab==='line'?'active':''}}" data-subtab="line" bindtap="switchSubTab">线体管理</view>
+      <view class="subtabbar-item {{activeSubTab==='equipment'?'active':''}}" data-subtab="equipment" bindtap="switchSubTab">设备管理</view>
+    </block>
+    <block wx:elif="{{activeTab==='report'}}">
+      <view class="subtabbar-item {{activeSubTab==='inspection'?'active':''}}" data-subtab="inspection" bindtap="switchSubTab">点检报表</view>
+      <view class="subtabbar-item {{activeSubTab==='repair'?'active':''}}" data-subtab="repair" bindtap="switchSubTab">维修报表</view>
+      <view class="subtabbar-item {{activeSubTab==='maintain'?'active':''}}" data-subtab="maintain" bindtap="switchSubTab">保养报表</view>
+    </block>
+  </view>
+  <!-- 内容区 -->
+  <view class="tab-content">
+    <block wx:if="{{showWelcome}}">
+      <view class="welcome-content">欢迎使用管理员后台！</view>
+    </block>
+    <block wx:elif="{{activeTab==='system' && activeSubTab==='user'}}">
+      <user-manage />
+    </block>
+    <block wx:elif="{{activeTab==='system' && activeSubTab==='line'}}">
+      <line-manage />
+    </block>
+    <block wx:elif="{{activeTab==='system' && activeSubTab==='equipment'}}">
+      <equipment-manage />
+    </block>
+    <block wx:elif="{{activeTab==='report'}}">
+      <view wx:if="{{activeSubTab==='inspection'}}"><inspection-report /></view>
+      <view wx:if="{{activeSubTab==='repair'}}"><repair-report /></view>
+      <block wx:if="{{activeSubTab==='maintain'}}">
+        <maintain-report />
+      </block>
+    </block>
+    <block wx:elif="{{activeTab==='dbops'}}">
+      <db-ops />
+    </block>
+  </view>
+</view> 

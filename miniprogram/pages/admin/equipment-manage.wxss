@@ -1,0 +1,46 @@
+.title-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 30rpx;
+}
+.title {
+  font-size: 32rpx;
+  font-weight: bold;
+}
+.line-item {
+  background: #fff;
+  border-radius: 8rpx;
+  margin-bottom: 20rpx;
+  padding: 20rpx;
+  box-shadow: 0 2rpx 8rpx #eee;
+  display: flex;
+  flex-direction: column;
+  gap: 10rpx;
+}
+.add-form {
+  background: #f5f6fa;
+  border-radius: 8rpx;
+  padding: 20rpx;
+  margin-bottom: 30rpx;
+  display: flex;
+  flex-direction: column;
+  gap: 20rpx;
+}
+.input {
+  border: 1rpx solid #ddd;
+  border-radius: 8rpx;
+  padding: 16rpx;
+  font-size: 28rpx;
+  background: #fff;
+}
+.form-btns {
+  display: flex;
+  gap: 20rpx;
+  justify-content: flex-end;
+}
+.empty {
+  color: #aaa;
+  text-align: center;
+  margin-top: 80rpx;
+} 

@@ -1,0 +1,29 @@
+<view>
+  <view class="title-bar">
+    <view class="title">线体管理</view>
+    <button size="mini" type="primary" bindtap="onShowAddForm">新建线体</button>
+  </view>
+  <view wx:if="{{showAddForm}}" class="add-form">
+    <input class="input" placeholder="线体名称" value="{{addLine}}" bindinput="onInputLine" />
+    <input class="input" placeholder="车间名称" value="{{addWorkshop}}" bindinput="onInputWorkshop" />
+    <view class="form-btns">
+      <button size="mini" type="primary" bindtap="onConfirmAdd">保存</button>
+      <button size="mini" bindtap="onCancelAdd">取消</button>
+    </view>
+  </view>
+  <block wx:if="{{lineList.length}}">
+    <block wx:for="{{lineList}}" wx:key="_id">
+      <view class="line-item">
+        <text>线体：{{item.line}}</text>
+        <text>车间：{{item.workshop}}</text>
+        <view class="line-btns">
+          <button size="mini" data-id="{{item._id}}" data-line="{{item.line}}" data-workshop="{{item.workshop}}" bindtap="onEditLine">编辑</button>
+          <button size="mini" type="warn" data-id="{{item._id}}" bindtap="onDeleteLine">删除</button>
+        </view>
+      </view>
+    </block>
+  </block>
+  <block wx:else>
+    <view class="empty">暂无线体</view>
+  </block>
+</view> 

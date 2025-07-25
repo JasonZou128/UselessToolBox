@@ -1,0 +1,27 @@
+<view class="container">
+  <view class="search-bar">
+    <view class="search-row">
+      <input class="search-input" placeholder="设备编号/扫码" value="{{searchAssetId}}" bindinput="onInputAssetId" />
+      <button size="mini" bindtap="onScanAssetId">扫码</button>
+    </view>
+    <view class="search-row">
+      <picker class="search-picker" mode="selector" range="{{allLines}}" bindchange="onLinePickerChange">
+        <view>{{searchLine ? searchLine : '选择线体'}}</view>
+      </picker>
+      <picker class="search-picker" mode="selector" range="{{allTypes}}" bindchange="onTypePickerChange">
+        <view>{{searchType ? searchType : '选择类型'}}</view>
+      </picker>
+      <button size="mini" type="primary" bindtap="onSearch">搜索</button>
+    </view>
+  </view>
+  <button type="primary" style="margin-top: 20rpx;" disabled="{{!canBatchSet}}" bindtap="onBatchSetPlan">批量设定保养计划</button>
+  <view class="device-list">
+    <block wx:for="{{deviceList}}" wx:key="assetId">
+      <view class="device-card" bindtap="onDeviceTap" data-assetid="{{item.assetId}}">
+        <view>设备编号：{{item.assetId}}</view>
+        <view>类型：{{item.type}}</view>
+        <view>线体：{{item.line}}</view>
+      </view>
+    </block>
+  </view>
+</view> 

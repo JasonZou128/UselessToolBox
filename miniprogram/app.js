@@ -1,32 +1,66 @@
 // app.js
 App({
   onLaunch() {
-    // 初始化云开发
+    // 云开发初始化
     if (!wx.cloud) {
-      console.error('请使用 2.2.3 或以上的基础库以使用云能力');
+      console.error('请使用 2.2.3 或以上的基础库以使用云能力')
     } else {
       wx.cloud.init({
-        // env 参数说明：
-        //   env 参数决定接下来小程序发起的云开发调用（wx.cloud.xxx）会默认请求到哪个云环境的资源
-        //   此处请填入环境 ID, 环境 ID 可打开云控制台查看
-        //   如不填则使用默认环境（第一个创建的环境）
-        env: 'prod-8g0iq9bwb972a467', // 你的云环境ID
-        traceUser: true,
-      });
+        env: 'cloud1-3g4ki6a194e32821', // 替换为你的云开发环境ID
+        traceUser: true
+      })
     }
-
-    // 获取用户信息
-    this.globalData = {
-      userInfo: null,
-      userRole: 'user', // 默认角色
-      openid: null
-    };
-
-    // 获取用户openid
-    this.getOpenId();
+    // 获取 openid 并写入本地
+    wx.cloud.callFunction({
+      name: 'login',
+      success: res => {
+        wx.setStorageSync('openid', res.result.openid);
+        console.log('云函数获取到 openid:', res.result.openid);
+      },
+      fail: err => {
+        console.error('获取 openid 失败', err);
+      }
+    });
   },
 
-  // 获取用户openid
+  // 初始化用户角色
+  initUserRole() {
+    try {
+      const storedRole = wx.getStorageSync('userRole');
+      const storedUserInfo = wx.getStorageSync('userInfo');
+      
+      if (storedRole && storedUserInfo) {
+        // 如果有存储的角色信息，直接使用
+        this.globalData.userRole = storedRole;
+        this.globalData.userInfo = storedUserInfo;
+        console.log('使用本地存储的角色信息:', { role: storedRole, userInfo: storedUserInfo });
+      } else {
+        // 如果没有存储的角色信息，使用默认值
+        this.globalData = {
+          userInfo: {
+            name: '演示用户',
+            avatarUrl: ''
+          },
+          userRole: 'operator', // 默认角色: operator, repair, admin
+          openid: 'demo_openid'
+        };
+        console.log('使用默认角色信息');
+      }
+    } catch (error) {
+      console.error('读取本地存储失败:', error);
+      // 出错时使用默认值
+      this.globalData = {
+        userInfo: {
+          name: '演示用户',
+          avatarUrl: ''
+        },
+        userRole: 'operator',
+        openid: 'demo_openid'
+      };
+    }
+  },
+
+  // 获取用户openid（暂时注释掉，使用演示数据）
   getOpenId() {
     wx.cloud.callFunction({
       name: 'getOpenId',
@@ -38,11 +72,14 @@ App({
       },
       fail: err => {
         console.error('获取openid失败', err);
+        // 使用演示数据
+        this.globalData.openid = 'demo_openid';
+        console.log('使用演示openid');
       }
     });
   },
 
-  // 检查用户角色
+  // 检查用户角色（暂时注释掉，使用演示数据）
   checkUserRole() {
     const db = wx.cloud.database();
     db.collection('users').where({
@@ -51,7 +88,7 @@ App({
       success: res => {
         if (res.data.length > 0) {
           // 用户已存在，获取角色信息
-          this.globalData.userRole = res.data[0].role || 'user';
+          this.globalData.userRole = res.data[0].role || 'operator';
           this.globalData.userInfo = res.data[0];
         } else {
           // 新用户，创建默认记录
@@ -60,17 +97,19 @@ App({
       },
       fail: err => {
         console.error('查询用户信息失败', err);
+        // 使用默认角色
+        this.globalData.userRole = 'operator';
       }
     });
   },
 
-  // 创建新用户
+  // 创建新用户（暂时注释掉）
   createNewUser() {
     const db = wx.cloud.database();
     db.collection('users').add({
       data: {
         openid: this.globalData.openid,
-        role: 'user',
+        role: 'operator',
         name: '新用户',
         department: '',
         phone: '',
@@ -79,7 +118,7 @@ App({
       },
       success: res => {
         console.log('创建用户成功', res._id);
-        this.globalData.userRole = 'user';
+        this.globalData.userRole = 'operator';
       },
       fail: err => {
         console.error('创建用户失败', err);
@@ -89,7 +128,7 @@ App({
 
   globalData: {
     userInfo: null,
-    userRole: 'user',
+    userRole: 'operator',
     openid: null
   }
 }); 

@@ -1,0 +1,137 @@
+.container {
+  padding: 40rpx;
+}
+.title {
+  font-size: 32rpx;
+  font-weight: bold;
+  margin-bottom: 30rpx;
+  text-align: center;
+}
+.info {
+  font-size: 28rpx;
+  margin-bottom: 10rpx;
+}
+.plan-add {
+  display: flex;
+  gap: 20rpx;
+  margin: 30rpx 0 20rpx 0;
+}
+.plan-row {
+  display: flex;
+  gap: 20rpx;
+  margin-bottom: 20rpx;
+}
+.input {
+  flex: 1;
+  border: 1rpx solid #ddd;
+  border-radius: 8rpx;
+  padding: 16rpx;
+  font-size: 28rpx;
+  background: #fff;
+}
+.plan-title {
+  font-size: 28rpx;
+  font-weight: bold;
+  margin: 30rpx 0 10rpx 0;
+}
+.plan-step {
+  font-size: 26rpx;
+  margin-bottom: 8rpx;
+  padding-left: 10rpx;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.scan-box {
+  margin-top: 40rpx;
+  display: flex;
+  flex-direction: column;
+  gap: 16rpx;
+}
+.scan-btn {
+  width: 100%;
+  background: #007aff;
+  color: #fff;
+  font-size: 30rpx;
+  border-radius: 8rpx;
+  padding: 20rpx 0;
+}
+.scan-result {
+  color: #007aff;
+  font-size: 28rpx;
+  text-align: center;
+  margin-top: 10rpx;
+}
+.plan-card {
+  background: #fff;
+  border-radius: 12rpx;
+  box-shadow: 0 2rpx 8rpx #eee;
+  margin-bottom: 24rpx;
+  padding: 24rpx;
+  word-break: break-all;
+}
+.plan-period {
+  font-weight: bold;
+  margin-bottom: 12rpx;
+}
+.plan-actions {
+  display: flex;
+  gap: 20rpx;
+  margin-top: 10rpx;
+}
+
+/* 弹窗样式 */
+.dialog-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+.dialog-content {
+  background: #fff;
+  border-radius: 12rpx;
+  width: 80%;
+  max-width: 600rpx;
+  padding: 40rpx;
+}
+.dialog-title {
+  font-size: 32rpx;
+  font-weight: bold;
+  text-align: center;
+  margin-bottom: 30rpx;
+}
+.dialog-body {
+  margin-bottom: 30rpx;
+}
+.dialog-body .input {
+  margin-bottom: 20rpx;
+}
+.dialog-footer {
+  display: flex;
+  gap: 20rpx;
+}
+.dialog-btn {
+  flex: 1;
+  padding: 20rpx 0;
+  border-radius: 8rpx;
+  font-size: 28rpx;
+  border: none;
+}
+.dialog-btn.cancel {
+  background: #f5f5f5;
+  color: #666;
+}
+.dialog-btn.confirm {
+  background: #007aff;
+  color: #fff;
+}
+.dialog-content .plan-step {
+  word-break: break-all;
+  white-space: normal;
+} 

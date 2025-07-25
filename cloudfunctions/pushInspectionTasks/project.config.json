@@ -1,0 +1,14 @@
+{
+  "miniprogramRoot": "./",
+  "cloudfunctionRoot": "./",
+  "setting": {
+    "urlCheck": true,
+    "es6": true,
+    "enhance": true,
+    "postcss": true,
+    "minified": true
+  },
+  "appid": "your-app-id",
+  "projectname": "pushInspectionTasks",
+  "libVersion": "2.14.1"
+} 

@@ -1,0 +1,53 @@
+<view>
+  <view class="title-bar">
+    <view class="title">设备管理</view>
+    <button size="mini" type="primary" bindtap="onShowAddForm">新建设备</button>
+  </view>
+  <view wx:if="{{showAddForm}}" class="add-form">
+    <input class="input" placeholder="设备编号（assetId）" value="{{addAssetId}}" bindinput="onInputAssetId" />
+    <input class="input" placeholder="设备类型（type）" value="{{addType}}" bindinput="onInputType" />
+    <picker class="input" mode="selector" range="{{lineOptions}}" bindchange="onLinePickerChange">
+      <view>{{addLine ? addLine : '请选择线体'}}</view>
+    </picker>
+    <picker class="input" mode="selector" range="{{repairGroupOptions}}" bindchange="onRepairGroupPickerChange">
+      <view>{{addRepairGroup ? addRepairGroup : '请选择维修分组'}}</view>
+    </picker>
+    <view class="form-btns">
+      <button size="mini" type="primary" bindtap="onConfirmAdd">保存</button>
+      <button size="mini" bindtap="onCancelAdd">取消</button>
+    </view>
+  </view>
+  <!-- 编辑设备弹窗 -->
+  <view wx:if="{{showEditForm}}" class="add-form">
+    <input class="input" placeholder="设备编号（assetId）" value="{{addAssetId}}" bindinput="onInputAssetId" />
+    <input class="input" placeholder="设备类型（type）" value="{{addType}}" bindinput="onInputType" />
+    <picker class="input" mode="selector" range="{{lineOptions}}" bindchange="onLinePickerChange">
+      <view>{{addLine ? addLine : '请选择线体'}}</view>
+    </picker>
+    <picker class="input" mode="selector" range="{{repairGroupOptions}}" bindchange="onRepairGroupPickerChange">
+      <view>{{addRepairGroup ? addRepairGroup : '请选择维修分组'}}</view>
+    </picker>
+    <view class="form-btns">
+      <button size="mini" type="primary" bindtap="onConfirmEdit">保存</button>
+      <button size="mini" bindtap="onCancelEdit">取消</button>
+    </view>
+  </view>
+  <block wx:if="{{equipmentList.length}}">
+    <block wx:for="{{equipmentList}}" wx:key="_id">
+      <view class="line-item">
+        <view>设备编号：{{item.assetId}}</view>
+        <view>类型：{{item.type}}</view>
+        <view>线体：{{item.line}}</view>
+        <view>维修组：{{item.repairGroup}}</view>
+        <view wx:if="{{item.status}}" style="color:#ff4d4f;margin:8rpx 0;">状态：{{item.status}}</view>
+        <view class="form-btns">
+          <button size="mini" bindtap="onShowEditForm" data-id="{{item._id}}" data-assetid="{{item.assetId}}" data-type="{{item.type}}" data-line="{{item.line}}" data-repairgroup="{{item.repairGroup}}">编辑</button>
+          <button size="mini" type="warn" bindtap="onDeleteEquipment" data-id="{{item._id}}">删除</button>
+        </view>
+      </view>
+    </block>
+  </block>
+  <block wx:else>
+    <view class="empty">暂无设备</view>
+  </block>
+</view> 

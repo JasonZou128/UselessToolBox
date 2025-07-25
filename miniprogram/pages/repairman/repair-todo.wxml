@@ -1,0 +1,27 @@
+<view class="repair-header">
+  您属于{{group}}维修组，以下是现在需要维修的设备，请尽快到场维修
+</view>
+<view class="device-list">
+  <block wx:for="{{deviceList}}" wx:key="assetId">
+    <view class="device-card">
+      <view>设备编号：{{item.assetId}}</view>
+      <view>类型：{{item.type}}</view>
+      <view>线体：{{item.line}}</view>
+      <view style="color:#ff4d4f;margin:8rpx 0;">状态：{{item.status}}</view>
+      <button size="mini" type="primary" style="margin-top:10rpx;" bindtap="onShowDialog" data-assetid="{{item.assetId}}">完成维修</button>
+    </view>
+  </block>
+</view>
+<!-- 维修弹窗 -->
+<view wx:if="{{showDialog}}" class="dialog-overlay" bindtap="onHideDialog">
+  <view class="dialog-content" catchtap="stopPropagation">
+    <view class="dialog-title">维修完成</view>
+    <view class="dialog-body">
+      <textarea class="input" placeholder="请填写维修内容" value="{{repairDesc}}" bindinput="onInputRepair" auto-height />
+    </view>
+    <view class="dialog-footer">
+      <button class="dialog-btn cancel" bindtap="onHideDialog">取消</button>
+      <button class="dialog-btn confirm" bindtap="onSubmitRepair" loading="{{submitting}}">提交</button>
+    </view>
+  </view>
+</view> 
