@@ -9,6 +9,11 @@ Component({
   },
   lifetimes: {
     attached() {
+      // 不在这里拉取，改为 pageLifetimes.show
+    }
+  },
+  pageLifetimes: {
+    show() {
       this.loadData();
     }
   },
@@ -16,7 +21,7 @@ Component({
     async loadData() {
       const openid = wx.getStorageSync('openid');
       const db = wx.cloud.database();
-      const userRes = await db.collection('Users').where({ _openid: openid, role: 'operator' }).get();
+      const userRes = await db.collection('Users').where({ openId: openid, role: 'operator' }).get();
       if (userRes.data.length) {
         const userLine = userRes.data[0].line;
         this.setData({ userLine });

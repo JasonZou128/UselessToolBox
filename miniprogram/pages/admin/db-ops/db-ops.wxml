@@ -2,4 +2,16 @@
   <button type="warn" loading="{{loading}}" disabled="{{loading}}" bindtap="onClearMaintainRecords">
     清理MaintainRecords数据库
   </button>
+  <button type="warn" loading="{{loading}}" disabled="{{loading}}" bindtap="onClearInspectionRecords">
+    清理InspectionRecords数据库
+  </button>
+  <button type="warn" loading="{{loading}}" disabled="{{loading}}" bindtap="onClearInspectionPlans">
+    清理InspectionPlans数据库
+  </button>
+  <button type="warn" loading="{{loading}}" disabled="{{loading}}" bindtap="onClearMaintainPlans">
+    清理MaintainPlans数据库
+  </button>
+  <button type="warn" loading="{{loading}}" disabled="{{loading}}" bindtap="onClearRepairRecords">
+    清理RepairRecords数据库
+  </button>
 </view> 

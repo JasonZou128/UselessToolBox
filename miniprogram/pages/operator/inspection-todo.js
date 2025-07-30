@@ -15,6 +15,11 @@ Component({
   },
   lifetimes: {
     attached() {
+      // 不在这里拉取，改为 pageLifetimes.show
+    }
+  },
+  pageLifetimes: {
+    show() {
       this.initUserAndLoad();
     }
   },
@@ -35,7 +40,7 @@ Component({
       this.setData({ loading: true });
       const db = wx.cloud.database();
       const openid = wx.getStorageSync('openid');
-      const userRes = await db.collection('Users').where({ _openid: openid, role: 'operator' }).get();
+      const userRes = await db.collection('Users').where({ openId: openid, role: 'operator' }).get();
       if (!userRes.data.length) {
         this.setData({ userLine: '（未分配线体）', userName: '', todoList: [], loading: false });
         return;
@@ -119,7 +124,6 @@ Component({
             confirmAssetId: scanAssetId
           }
         });
-        console.log('onSubmitFinish update result:', res);
         if (res.stats && res.stats.updated === 0) {
           wx.showToast({ title: '未更新任何数据，可能是权限问题', icon: 'none' });
         } else {
@@ -128,7 +132,6 @@ Component({
           this.initUserAndLoad();
         }
       } catch (err) {
-        console.error('onSubmitFinish update error:', err);
         wx.showToast({ title: '更新失败', icon: 'none' });
       }
     },
@@ -140,7 +143,6 @@ Component({
         const res = await db.collection('InspectionRecords').doc(rec._id).update({
           data: { status: '休班', finishTime: new Date() }
         });
-        console.log('onRest update result:', res);
         if (res.stats && res.stats.updated === 0) {
           wx.showToast({ title: '未更新任何数据，可能是权限问题', icon: 'none' });
         } else {
@@ -148,7 +150,6 @@ Component({
           this.initUserAndLoad();
         }
       } catch (err) {
-        console.error('onRest update error:', err);
         wx.showToast({ title: '更新失败', icon: 'none' });
       }
     },

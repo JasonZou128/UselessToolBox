@@ -10,8 +10,8 @@
         <text wx:if="{{item.role === 'operator' && item.line}}">线体：{{item.line}}</text>
         <text wx:if="{{item.role === 'repairman' && item.group}}">维修组：{{item.group}}</text>
         <view class="auth-btns" wx:if="{{item.status === 'pending'}}">
-          <button size="mini" type="primary" data-id="{{item._id}}" data-role="operator" bind:tap="onAuth">授权为操作员</button>
-          <button size="mini" type="primary" data-id="{{item._id}}" data-role="repairman" bind:tap="onAuth">授权为维修员</button>
+          <button size="mini" type="primary" data-id="{{item._id}}" data-role="operator" bindtap="onAuth">授权为操作员</button>
+          <button size="mini" type="primary" data-id="{{item._id}}" data-role="repairman" bindtap="onAuth">授权为维修员</button>
         </view>
         <button size="mini" type="warn" data-id="{{item._id}}" bind:tap="onDelete" style="margin-top: 16rpx;">删除</button>
         <!-- 分配线体/维修组按钮 -->

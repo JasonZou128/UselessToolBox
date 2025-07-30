@@ -176,7 +176,7 @@ Component({
         }
       });
     },
-    onAuth: async function(e) {
+    async onAuth(e) {
       const { id, role } = e.currentTarget.dataset;
       wx.showLoading({ title: '授权中...' });
       try {

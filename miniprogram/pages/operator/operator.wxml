@@ -5,10 +5,10 @@
   </view>
   <view class="main-content">
     <view wx:if="{{activeTab === 0}}">
-      <repair-report />
+      <repair-report id="repairReport" />
     </view>
     <view wx:elif="{{activeTab === 1}}">
-      <inspection-todo />
+      <inspection-todo id="inspectionTodo" />
     </view>
   </view>
   <view class="tabbar-fixed">

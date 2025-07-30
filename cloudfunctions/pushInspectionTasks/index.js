@@ -11,7 +11,7 @@ exports.main = async (event, context) => {
 
   // 1. 获取所有线体
   const linesRes = await db.collection('Lines').get();
-  const lines = linesRes.data.map(l => l.name);
+  const lines = linesRes.data.map(l => l.line);
 
   // 2. 获取所有设备
   const eqRes = await db.collection('Equipments').get();

@@ -5,4 +5,5 @@
   width: 100%;
   font-size: 32rpx;
   height: 90rpx;
+  margin-bottom: 30rpx;
 } 

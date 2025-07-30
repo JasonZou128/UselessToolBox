@@ -7,4 +7,18 @@
     <input class="input" placeholder="管理员密码" password="true" bindinput="onPasswordInput" />
     <button class="login-btn" loading="{{loading}}" bindtap="onAdminLogin">管理员登录</button>
   </view>
+</view>
+
+<!-- 线体选择器弹窗 -->
+<view wx:if="{{showLinePicker}}" class="modal-mask">
+  <view class="modal-box">
+    <view class="modal-title">请选择您今日工作的线体</view>
+    <picker mode="selector" range="{{lineOptions}}" bindchange="onLinePickerChange">
+      <view class="picker-input">{{lineOptions[selectedLineIndex] || '请选择线体'}}</view>
+    </picker>
+    <view class="modal-buttons">
+      <button size="mini" type="primary" bindtap="onConfirmLine">确认</button>
+      <button size="mini" bindtap="onCancelLine">取消</button>
+    </view>
+  </view>
 </view> 
